@@ -3,4 +3,5 @@
 server/search-engine/out/*
 server/search-engine/src/main/resources/*
 server/search-engine/target/*
+*.DS_Store
 
