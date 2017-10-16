@@ -59,7 +59,7 @@ public class Index {
     public void indexPage(String url, Elements paragraphs) {
         if (paragraphs == null) return;
         // make a TermProcessor and count the terms in the paragraphs
-        url = UrlUtil.getCleanUrl(url);
+        url = UrlUtil.getUrlString(url);
 
         if (url == null) return;
 
@@ -101,7 +101,7 @@ public class Index {
     }
 
     public boolean shouldIndex(String url) {
-        url = UrlUtil.getCleanUrl(url);
+        url = UrlUtil.getUrlString(url);
         if (url == null) return false;
         Long lastIndexedTime = timeIndexed.get(url);
 

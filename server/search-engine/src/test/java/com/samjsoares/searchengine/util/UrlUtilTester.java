@@ -1,9 +1,13 @@
 package com.samjsoares.searchengine.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class UrlUtilTester {
 
@@ -35,6 +39,19 @@ public class UrlUtilTester {
     public void testContentType_ogg() {
         String contentType = "application/ogg";
         assertFalse(UrlUtil.isValidContentType(contentType));
+    }
+
+    @Test
+    public void testGetGoogleRobotsTxt() {
+        String urlStr = "https://www.google.com/search?q=josh+david";
+        String expected = "https://www.google.com/robots.txt";
+        URL url = null;
+        try {
+            url = new URL(urlStr);
+        } catch (MalformedURLException e) {
+        }
+
+        assertEquals(expected, UrlUtil.getRobotsTxtURL(url).toString());
     }
 
 }
