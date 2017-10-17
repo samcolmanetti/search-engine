@@ -1,15 +1,18 @@
 package com.samjsoares.searchengine.core;
 
 import com.samjsoares.searchengine.util.UrlUtil;
+import dagger.Module;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
+@Module(includes = FetcherModule.class)
 public class Crawler {
   /**
    * URL of where we started crawling
@@ -29,7 +32,7 @@ public class Crawler {
   /**
    * Fetcher used to get pages
    */
-  private final static Fetcher fetcher = new Fetcher();
+  @Inject Fetcher fetcher;
 
   /**
    * Handler class that determines whether we can crawl a certain directory
@@ -143,7 +146,7 @@ public class Crawler {
     // make a Crawler
     Index index = new Index();
 
-    String source = "https://my.scranton.edu";
+    String source = "https://en.wikipedia.org/wiki/Journalism";
     Crawler wc = new Crawler(source, index);
 
     // loop until we index a new page

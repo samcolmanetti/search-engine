@@ -8,6 +8,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,12 +17,19 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+@Singleton
 public class Fetcher {
   private final static long MIN_INTERVAL = 1000;
   private final static String SLASH = File.separator;
   private final static String CHAR_SET = "UTF-16";
 
   private Map<String, Long> lastRequestTimeMap = new LRUCache<>(128);
+
+  /**
+   * Empty constructor for dependency injection
+   */
+  @Inject
+  public Fetcher() {}
 
   /**
    * Fetches and parses a URL string, returning a list of paragraph elements.
