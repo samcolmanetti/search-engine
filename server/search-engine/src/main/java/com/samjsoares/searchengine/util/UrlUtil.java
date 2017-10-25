@@ -18,20 +18,31 @@ public class UrlUtil {
   private final static String ROBOTS_TXT_PATH = "/robots.txt";
 
   public static String getUrlString(String url) {
-    try {
-        URI uri = new URI(url);
-        return new URI(
-                uri.getScheme(),
-                uri.getAuthority(),
-                uri.getPath(),
-                null,
-                null).toString();
-    } catch (Exception e) {
-        return null;
+    URI uri = getUri(url);
+
+    if (uri == null) {
+      return null;
     }
+
+    return uri.toString();
   }
 
-  public static URI getUri (String url) {
+  public static URL getCleanUrl (String url) {
+    try {
+      URI uri = getUri(url);
+      if (uri != null) {
+        return uri.toURL();
+      }
+    } catch (MalformedURLException e) {
+      System.out.printf("Malformed URL: %s \n %s", url, e.toString());
+    } catch (Exception e) {
+      System.out.printf("Unknown Exception in getCleanUrl: %s \n %s", url, e.toString());
+    }
+
+    return null;
+  }
+
+  private static URI getUri (String url) {
     try {
         url = cleanUpUrl(url);
         URI uri = new URI(url);
@@ -41,43 +52,33 @@ public class UrlUtil {
                 uri.getPath(),
                 null,
                 null);
-    } catch (URISyntaxException e) {
+    } catch (Exception e) {
         System.out.printf("Failed to create URI for\'%s\': %s\n", url, e.toString());
         return null;
     }
   }
 
   private static String cleanUpUrl (String url) {
-    // strip query from url
-    url = StringUtils.substringBefore(url, "?");
-
     // replace spaces with html code %20
     url = StringUtils.replaceAll(url, "\\s", "%20");
+
+    if (shouldContainHttp(url)) {
+      url = "http://" + url;
+    }
 
     return url;
   }
 
-  public static URL getCleanUrl (String url) {
-    try {
-      if (!StringUtils.startsWith(url,"http")) {
-        return null;
-      }
-
-      URI uri = getUri(url);
-      if (uri != null) {
-          return uri.toURL();
-      }
-    } catch (MalformedURLException e) {
-        System.out.printf("Malformed URL: %s \n %s", url, e.toString());
-    }
-
-    return null;
+  private static boolean shouldContainHttp (String url) {
+    return !StringUtils.startsWith(url,"http") && !StringUtils.contains(url, "://");
   }
+
+
 
   public static URL getRobotsTxtURL (URL url) {
     try {
         return new URL(url.getProtocol(), url.getAuthority(), url.getPort(), ROBOTS_TXT_PATH);
-    } catch (MalformedURLException e) {
+    } catch (Exception e) {
         System.out.println("Failed to get robots.txt URL: " + e.toString());
     }
 
@@ -85,6 +86,7 @@ public class UrlUtil {
   }
 
   public static boolean isValidContentType (String contentType) {
+    contentType = StringUtils.substringBefore(contentType, ";");
     return CONTENT_TYPE_MATCHER.reset(contentType).matches();
   }
 }
