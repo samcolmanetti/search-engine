@@ -1,6 +1,7 @@
 package com.samjsoares.searchengine.driver;
 
 import com.samjsoares.searchengine.core.Crawler;
+import com.samjsoares.searchengine.core.InMemoryIndex;
 import com.samjsoares.searchengine.core.Index;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.Map;
 public class SimpleCrawlerDriver {
   public static void main(String[] args) throws IOException {
     // make a Crawler
-    Index index = new Index();
+    Index index = new InMemoryIndex();
 
     String source = "https://en.wikipedia.org/wiki/Education";
     Crawler wc = new Crawler(source, index);

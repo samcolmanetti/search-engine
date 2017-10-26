@@ -13,6 +13,8 @@ public class TermInfo {
   @Column("count")
   private int count;
 
+  private String url;
+
   public TermInfo() {}
 
   public long getDocId() {
@@ -37,5 +39,22 @@ public class TermInfo {
 
   public void setCount(int count) {
     this.count = count;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  @Override
+  public String toString() {
+    return "TermInfo{" +
+        "docId=" + docId +
+        ", term='" + term + '\'' +
+        ", count=" + count +
+        '}';
   }
 }

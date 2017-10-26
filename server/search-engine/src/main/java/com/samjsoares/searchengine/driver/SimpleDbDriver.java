@@ -1,5 +1,8 @@
 package com.samjsoares.searchengine.driver;
 
+import com.samjsoares.searchengine.dao.DocumentInfoDao;
+import com.samjsoares.searchengine.dao.DocumentInfoDaoImpl;
+import com.samjsoares.searchengine.model.DocumentInfo;
 import org.knowm.yank.PropertiesUtils;
 import org.knowm.yank.Yank;
 
@@ -8,46 +11,31 @@ import java.util.Properties;
 public class SimpleDbDriver {
 
   public static void runSimpleRead() {
-    // Connection Pool Properties
-    Properties dbProps = PropertiesUtils.getPropertiesFromClasspath("properties/POSTGRES_DB.properties");
-
-    // setup connection pool
-    Yank.setupDefaultConnectionPool(dbProps);
-
-    String sql = "select url from url_seed where id = ?";
-    Object[] params = new Object[] { 1000 };
-    String result = Yank.queryScalar(sql, String.class, params);
-
-    System.out.println(result);
-
-    // release connection pool
-    Yank.releaseDefaultConnectionPool();
+    DocumentInfoDao documentInfoDao = new DocumentInfoDaoImpl();
+    System.out.println(documentInfoDao.get("google.com"));
   }
 
-  public static void runSimpleInsert() {
-    // Connection Pool Properties
-    Properties dbProps = PropertiesUtils.getPropertiesFromClasspath("properties/POSTGRES_DB.properties");
-    Properties sqlProps = PropertiesUtils.getPropertiesFromClasspath("properties/SQL_SCRIPTS.properties");
+  private static void runSimpleInsert() {
+    DocumentInfoDao documentInfoDao = new DocumentInfoDaoImpl();
 
-    // setup connection pool
-    Yank.setupDefaultConnectionPool(dbProps);
-    Yank.addSQLStatements(sqlProps);
+    long time1 = System.currentTimeMillis();
+    documentInfoDao.upsert("sam1.com", System.currentTimeMillis());
+    documentInfoDao.upsert("sam2.com", System.currentTimeMillis());
+    documentInfoDao.upsert("sam3.com", System.currentTimeMillis());
+    long time2 = System.currentTimeMillis();
 
-    Object[] params = new Object[] { "joshdavid.com", System.currentTimeMillis()};
-    try {
-      Long id = Yank.insertSQLKey("DOC_INFO_UPSERT", params);
-      System.out.println("id = " + id);
-    } catch (Exception e) {
-      e.printStackTrace();
+    System.out.println("Time to insert: " + (time2 - time1) + "ms");
+  }
+
+  private static void printDocuments() {
+    DocumentInfoDao documentInfoDao = new DocumentInfoDaoImpl();
+    for (DocumentInfo info : documentInfoDao.getAll()) {
+      System.out.println(info);
     }
-
-    // release connection pool
-    Yank.releaseDefaultConnectionPool();
   }
-
-
 
   public static void main (String[] args) {
     runSimpleInsert();
+    printDocuments();
   }
 }

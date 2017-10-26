@@ -37,4 +37,13 @@ public class DocumentInfo {
   public void setTimeIndexed(long timeIndexed) {
     this.timeIndexed = timeIndexed;
   }
+
+  @Override
+  public String toString() {
+    return "DocumentInfo{" +
+        "id=" + id +
+        ", url='" + url + '\'' +
+        ", timeIndexed=" + timeIndexed +
+        '}';
+  }
 }
