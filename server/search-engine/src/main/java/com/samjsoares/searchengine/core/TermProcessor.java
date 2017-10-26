@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.samjsoares.searchengine.util.NodeIterable;
 import com.samjsoares.searchengine.model.TermInfo;
+import com.samjsoares.searchengine.util.NodeIterable;
 import com.samjsoares.searchengine.util.CollectionsUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -95,8 +95,8 @@ public class TermProcessor {
         putTermCount(term, getTermCount(term) + 1);
     }
 
-    public void put(String term, TermInfo termInfo) {
-        map.put(term, termInfo);
+    public void put(String term, TermInfo termInfoInfo) {
+        map.put(term, termInfoInfo);
     }
 
     /**
@@ -106,14 +106,14 @@ public class TermProcessor {
      * @param count
      */
     public void putTermCount(String term, int count) {
-        TermInfo termInfo = get(term);
+        TermInfo termInfoInfo = get(term);
 
-        if (termInfo == null) {
-            termInfo = new TermInfo();
+        if (termInfoInfo == null) {
+            termInfoInfo = new TermInfo();
         }
 
-        termInfo.setCount(count);
-        put(term, termInfo);
+        termInfoInfo.setCount(count);
+        put(term, termInfoInfo);
     }
 
     /**
@@ -127,10 +127,10 @@ public class TermProcessor {
     }
 
     public Integer getTermCount(String term) {
-        TermInfo termInfo = get(term);
+        TermInfo termInfoInfo = get(term);
 
-        if (termInfo != null) {
-            return termInfo.getCount();
+        if (termInfoInfo != null) {
+            return termInfoInfo.getCount();
         }
 
         return 0;

@@ -1,52 +1,41 @@
 package com.samjsoares.searchengine.model;
 
-public class TermInfo{
-    private int count;
-    private int position;
-    private Type type;
+import org.knowm.yank.annotations.Column;
 
-    public TermInfo() {}
+public class TermInfo {
 
-    public TermInfo(int count, int position, Type type) {
-        this.count = count;
-        this.position = position;
-        this.type = type;
-    }
+  @Column("doc_id")
+  private long docId;
 
-    public TermInfo(int count) {
-        this.count = count;
-    }
+  @Column("term")
+  private String term;
 
-    public int getCount() {
-        return count;
-    }
+  @Column("count")
+  private int count;
 
-    public void setCount(int count) {
-        this.count = count;
-    }
+  public TermInfo() {}
 
-    public int getPosition() {
-        return position;
-    }
+  public long getDocId() {
+    return docId;
+  }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
+  public void setDocId(long docId) {
+    this.docId = docId;
+  }
 
-    public Type getType() {
-        return type;
-    }
+  public String getTerm() {
+    return term;
+  }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
+  public void setTerm(String term) {
+    this.term = term;
+  }
 
-    public enum Type {
-        bold,
-        italics,
-        title,
-        paragraph
-    }
+  public int getCount() {
+    return count;
+  }
 
-
+  public void setCount(int count) {
+    this.count = count;
+  }
 }

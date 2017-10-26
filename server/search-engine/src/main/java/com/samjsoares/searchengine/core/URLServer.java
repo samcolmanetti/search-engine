@@ -1,5 +1,7 @@
 package com.samjsoares.searchengine.core;
 
-public class URLServer {
+import java.net.URL;
 
+public interface URLServer {
+  URL getNextUrl();
 }

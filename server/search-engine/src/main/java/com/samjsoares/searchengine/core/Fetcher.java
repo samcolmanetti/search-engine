@@ -46,7 +46,7 @@ public class Fetcher {
       return null;
     }
 
-    saveToFile(doc, realUrl);
+    //saveToFile(doc, realUrl);
     return doc.children();
   }
 
@@ -118,7 +118,7 @@ public class Fetcher {
 
   private String getFileName(URL url) {
     String path = url.getHost() + url.getPath();
-    return "src" + SLASH + "main" + SLASH + "resources" + SLASH + path;
+    return "src" + SLASH + "main" + SLASH + "resources" + SLASH + "document_backup" + SLASH + path;
   }
 
   private long getLastRequestTime(URL url) {
