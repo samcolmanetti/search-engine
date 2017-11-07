@@ -16,39 +16,29 @@ public class SimpleCrawlerDriver {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private Indexer indexer;
+  private Crawler crawler;
 
   @Autowired
-  public SimpleCrawlerDriver(Indexer indexer){
+  public SimpleCrawlerDriver(Indexer indexer, Crawler crawler){
     this.indexer = indexer;
+    this.crawler = crawler;
   }
 
   public void run() {
-    // make a Crawler
-    String source = "http://www.cs.scranton.edu/";
-    Crawler wc = new Crawler(source, indexer);
 
     // loop until we indexer a new page
     boolean continueCrawling;
-    int maxCrawl = 100;
+    int maxCrawl = 9001;
     int crawlCount = 0;
 
     logger.info("Starting crawler...");
     do {
-      continueCrawling = wc.crawl(false);
+      continueCrawling = crawler.crawl(false);
       crawlCount++;
 
       logger.info("Crawled number: " + crawlCount);
     } while (continueCrawling && crawlCount < maxCrawl);
 
     logger.info("Crawler is finished...");
-
-    /*
-    String searchTerm = "indexer";
-    System.out.printf("\nResults for term '%s'\n", searchTerm);
-    Map<String, Integer> map = indexer.getCounts(searchTerm);
-    for (Map.Entry<String, Integer> entry : map.entrySet()) {
-      System.out.println(entry.getKey() + " = " + entry.getValue());
-    }
-    */
   }
 }

@@ -31,5 +31,9 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
+    <bean id="urlServer" class="com.samjsoares.soar.core.URLServerImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
 
 </beans>

@@ -1,6 +1,6 @@
 package com.samjsoares.soar.core;
 
-import com.samjsoares.soar.core.structure.LRUCache;
+import com.samjsoares.soar.core.datastructure.LRUCacheMap;
 import com.samjsoares.soar.util.UrlUtil;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Connection;
@@ -21,9 +21,9 @@ public class Fetcher {
   private final static String SLASH = File.separator;
   private final static String CHAR_SET = "UTF-16";
 
-  private Map<String, Long> lastRequestTimeMap = new LRUCache<>(128);
+  private Map<String, Long> lastRequestTimeMap = new LRUCacheMap<>(128);
 
-  public Fetcher() { }
+  public Fetcher() {}
 
   /**
    * Fetches and parses a URL string, returning a list of paragraph elements.

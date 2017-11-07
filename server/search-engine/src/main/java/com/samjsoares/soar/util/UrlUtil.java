@@ -68,6 +68,10 @@ public class UrlUtil {
   }
 
   private static boolean shouldContainHttp (String url) {
+    if (StringUtils.isBlank(url)) {
+      return false;
+    }
+
     return !StringUtils.startsWith(url,"http") && !StringUtils.contains(url, "://");
   }
 

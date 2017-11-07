@@ -1,18 +1,22 @@
 package com.samjsoares.soar.core;
 
 import com.panforge.robotstxt.RobotsTxt;
-import com.samjsoares.soar.core.structure.LRUCache;
+import com.samjsoares.soar.core.datastructure.LRUCacheMap;
 import com.samjsoares.soar.util.UrlUtil;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 
+@Component
 public class RobotsHandler {
 
   private final static int CACHE_LIMIT = 128;
 
-  private Map<String, RobotsTxt> map = new LRUCache<>(CACHE_LIMIT);
+  private Map<String, RobotsTxt> map = new LRUCacheMap<>(CACHE_LIMIT);
+
+  public RobotsHandler() {}
 
   public RobotsTxt add(URL url) {
     if (url == null) {
@@ -67,9 +71,6 @@ public class RobotsHandler {
       return false;
     }
 
-    return true;
-    /*
-
     RobotsTxt robotsTxt = contains(url)
             ? get(url)
             : add(url);
@@ -86,7 +87,6 @@ public class RobotsHandler {
       System.out.println("RobotsTxt query failed: " + e.toString());
       return false;
     }
-    */
 
   }
 

@@ -1,19 +1,24 @@
 package com.samjsoares.soar.core;
 
+import com.samjsoares.soar.core.datastructure.LRUCacheSet;
 import com.samjsoares.soar.util.UrlUtil;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.Queue;
 
+@Component
 public class Crawler {
   /**
    * URL of where we started crawling
    */
-  private final URL source;
+  //private final URL source;
 
   /**
    * Where the results are stored
@@ -28,34 +33,25 @@ public class Crawler {
   /**
    * Fetcher used to get pages
    */
-  private final static Fetcher fetcher = new Fetcher();
+  private Fetcher fetcher;
 
   /**
    * Handler class that determines whether we can crawl a certain directory
    */
-  private final static RobotsHandler robotsHandler = new RobotsHandler();
+  private RobotsHandler robotsHandler;
 
+  private URLServer urlServer;
 
-  /**
-   * Constructor.
-   *
-   * @param source
-   * @param indexer
-   */
-  public Crawler(URL source, Indexer indexer) {
-    this.source = source;
+  private LRUCacheSet<URL> cache = new LRUCacheSet<>(512);
+
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+  @Autowired
+  public Crawler(Indexer indexer, Fetcher fetcher, RobotsHandler robotsHandler, URLServer urlServer) {
     this.indexer = indexer;
-    enqueueUrl(source);
-  }
-
-  /**
-   * Constructor.
-   *
-   * @param source
-   * @param indexer
-   */
-  public Crawler(String source, Indexer indexer) {
-    this(UrlUtil.getCleanUrl(source), indexer);
+    this.fetcher = fetcher;
+    this.robotsHandler = robotsHandler;
+    this.urlServer = urlServer;
   }
 
   /**
@@ -71,22 +67,27 @@ public class Crawler {
    * Gets a URL from the queue and indexes it.
    *
    * @param offline
-   * @return Number of pages indexed.
+   * @return boolean indicating whether or not to keep crawling
    */
   public boolean crawl(boolean offline) {
     if (queue.isEmpty()) {
-      System.out.println("Queue is empty");
-      return false;
+      logger.info("Queue is empty");
+      if (enqueueUrl(urlServer.getNextUrl())) {
+        logger.info("Pulled new url from seed: " + queue.peek());
+      } else {
+        return false;
+      }
     }
 
-    URL url = queue.poll();
+    URL url = getNextUrl();
 
     if (!indexer.shouldIndex(url.toString())) {
-      //System.out.println("Already indexed " + url);
+      logger.debug("Already indexed " + url);
+      addInternalLinks(url);
       return true;
     }
 
-    System.out.println("Crawling " + url);
+    logger.info("Crawling " + url);
     Elements paragraphs = !offline
         ? fetcher.fetch(url.toString())
         : fetcher.read(url.toString());
@@ -97,6 +98,20 @@ public class Crawler {
     }
 
     return true;
+  }
+
+  private URL getNextUrl() {
+    URL url;
+    do {
+      url = queue.poll();
+    } while (!robotsHandler.isAllowed(url));
+
+    return url;
+  }
+
+  private void addInternalLinks (URL url) {
+    Elements paragraphs = fetcher.fetch(url.toString());
+    queueInternalLinks(paragraphs);
   }
 
   /**
@@ -114,7 +129,7 @@ public class Crawler {
     for (Element urlElement : urlElements) {
       String absUrl = urlElement.attr("abs:href");
       if (!enqueueUrl(absUrl)) {
-        System.out.println("Failed to enqueue: " + absUrl);
+        logger.debug("Failed to enqueue: " + absUrl);
       }
     }
   }
@@ -124,17 +139,15 @@ public class Crawler {
   }
 
   private boolean enqueueUrl(URL url) {
-    if (url == null) {
-      System.out.println("Failed to enqueue null url");
+    if (url == null || cache.contains(url)) {
       return false;
     }
 
-    if (robotsHandler.isAllowed(url) && queue.offer(url)) {
-      //System.out.println("Adding to queue: " + url.toString());
+    if (queue.offer(url)) {
+      cache.add(url);
       return true;
     }
 
-    System.out.println("Robots.txt prevents enqueueing: " + url.toString());
     return false;
   }
 

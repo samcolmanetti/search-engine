@@ -7,4 +7,5 @@ server/search-engine/target/*
 *.idea/*
 *.idea*
 *.imi
+*.properties
 
