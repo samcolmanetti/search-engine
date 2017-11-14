@@ -4,6 +4,7 @@ import com.samjsoares.soar.util.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.net.URL;
@@ -19,9 +20,8 @@ public class URLServerImpl implements URLServer {
   }
 
   @Override
+  @Transactional
   public URL getNextUrl() {
-    //TODO: put in transaction
-
     long index = jdbcTemplate.queryForObject("select index from url_seed_index", Long.class);
 
     String url =
