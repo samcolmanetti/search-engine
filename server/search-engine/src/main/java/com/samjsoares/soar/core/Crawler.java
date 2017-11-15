@@ -2,6 +2,7 @@ package com.samjsoares.soar.core;
 
 import com.samjsoares.soar.core.datastructure.LRUCacheSet;
 import com.samjsoares.soar.util.UrlUtil;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 
 @Component
 public class Crawler {
@@ -43,6 +45,8 @@ public class Crawler {
   private URLServer urlServer;
 
   private LRUCacheSet<URL> cache = new LRUCacheSet<>(512);
+
+  private Random random = new Random();
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -88,19 +92,27 @@ public class Crawler {
     }
 
     logger.info("Crawling " + url);
-    Elements paragraphs = !offline
-        ? fetcher.fetch(url.toString())
-        : fetcher.read(url.toString());
+    Document document = !offline
+        ? fetcher.fetchDocument(url.toString())
+        : fetcher.readDocument(url.toString());
 
-    if (paragraphs != null) {
-      indexer.indexPage(url.toString(), paragraphs);
-      queueInternalLinks(paragraphs);
+    if (document != null) {
+      indexer.indexPage(url.toString(), document);
+      queueInternalLinks(document.children());
     }
 
     return true;
   }
 
   private URL getNextUrl() {
+    if (random.nextDouble() > 0.3) {
+      return getNextUrlFromQueue();
+    } else {
+      return urlServer.getNextUrl();
+    }
+  }
+
+  private URL getNextUrlFromQueue() {
     URL url;
     do {
       url = queue.poll();
