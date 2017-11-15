@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -36,7 +37,7 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
   public DocumentInfoDaoImpl() {}
 
   @Override
-  public long upsert (final String url, final long timeIndexed) {
+  public long upsert (final String url, final long timeIndexed, final String title, final String description) {
     KeyHolder holder = new GeneratedKeyHolder();
 
     jdbcTemplate.update(new PreparedStatementCreator() {
@@ -45,6 +46,8 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
         PreparedStatement ps = connection.prepareStatement(DocumentInfoSql.UPSERT, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, url);
         ps.setLong(2, timeIndexed);
+        ps.setString(3, title);
+        ps.setString(4, description);
         return ps;
       }
     }, holder);
@@ -59,12 +62,16 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
 
   @Override
   public long upsert(DocumentInfo documentInfo) {
-    return upsert(documentInfo.getUrl(), documentInfo.getTimeIndexed());
+    return upsert(
+        documentInfo.getUrl(),
+        documentInfo.getTimeIndexed(),
+        documentInfo.getTitle(),
+        documentInfo.getDescription());
   }
 
   @Override
   public int[] upsert(List<DocumentInfo> documentInfos) {
-    // TODO: implement with jdbcTemplate
+    // TODO: implement with jdbcTemplate ~ low priority
     Object[][] params = new Object[documentInfos.size()][];
     for (int i = 0; i < documentInfos.size(); i++) {
       DocumentInfo documentInfo = documentInfos.get(i);
@@ -113,7 +120,23 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
   @Override
   public long getId (String url) {
     Object[] params = new Object[] {url};
-    return jdbcTemplate.queryForObject(DocumentInfoSql.SELECT_ID, params, Long.class);
+
+    try {
+      return jdbcTemplate.queryForObject(DocumentInfoSql.SELECT_ID, params, Long.class);
+    } catch (Exception e) {
+      return -1;
+    }
+  }
+
+  @Override
+  public long getTimeIndexed (String url) {
+    Object[] params = new Object[] {url};
+
+    try {
+      return jdbcTemplate.queryForObject(DocumentInfoSql.SELECT_TIME_INDEXED, params, Long.class);
+    } catch(Exception e) {
+      return -1;
+    }
   }
 
   @Override

@@ -32,6 +32,22 @@ public class Fetcher {
    * @return Elements document elements
    */
   public Elements fetch(String url) {
+    Document doc = fetchDocument(url);
+
+    if (doc == null) {
+      return null;
+    }
+
+    return doc.children();
+  }
+
+  /**
+   * Fetches and parses a URL string, returning a list of paragraph elements.
+   *
+   * @param url
+   * @return Elements document elements
+   */
+  public Document fetchDocument(String url) {
     URL realUrl;
     try {
       realUrl = new URL(url);
@@ -50,7 +66,7 @@ public class Fetcher {
     }
 
     //saveToFile(doc, realUrl);
-    return doc.children();
+    return doc;
   }
 
   private Document downloadDocument(String url) {
@@ -96,6 +112,23 @@ public class Fetcher {
    * @throws IOException
    */
   public Elements read(String url) {
+    Document doc = readDocument(url);
+
+    if (doc == null) {
+      return null;
+    }
+
+    return doc.children();
+  }
+
+  /**
+   * Reads the contents of a page from src/resources.
+   *
+   * @param url
+   * @return Document
+   * @throws IOException
+   */
+  public Document readDocument(String url) {
     URL realUrl;
     try {
       realUrl = new URL(url);
@@ -115,8 +148,7 @@ public class Fetcher {
     }
 
     Document doc = Jsoup.parse(file, CHAR_SET);
-    Elements paras = doc.select("p");
-    return paras;
+    return doc;
   }
 
   private String getFileName(URL url) {

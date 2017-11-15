@@ -21,9 +21,25 @@ public class SimpleDbDriver {
 
   public  void runSimpleInsert() {
     long time1 = System.currentTimeMillis();
-    documentInfoDao.upsert("sam1.com", System.currentTimeMillis());
-    documentInfoDao.upsert("sam2.com", System.currentTimeMillis());
-    documentInfoDao.upsert("sam3.com", System.currentTimeMillis());
+
+    documentInfoDao.upsert(
+        "sam1.com",
+        System.currentTimeMillis(),
+        "sam1",
+        "this is the description for sam1");
+
+    documentInfoDao.upsert(
+        "sam2.com",
+        System.currentTimeMillis(),
+        "sam2",
+        "this is the description for sam2");
+
+    documentInfoDao.upsert(
+        "sam3.com",
+        System.currentTimeMillis(),
+        "sam3",
+        "this is the description for sam3");
+
     long time2 = System.currentTimeMillis();
 
     logger.info("Time to insert: " + (time2 - time1));

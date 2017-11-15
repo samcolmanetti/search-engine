@@ -28,7 +28,7 @@ public class SimpleCrawlerDriver {
 
     // loop until we indexer a new page
     boolean continueCrawling;
-    int maxCrawl = 9001;
+    int maxCrawl = 1_000_000;
     int crawlCount = 0;
 
     logger.info("Starting crawler...");

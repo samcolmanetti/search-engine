@@ -15,6 +15,7 @@ public class SearchInfoMapper implements RowMapper{
     searchInfo.setPageRank(resultSet.getDouble("page_rank"));
     searchInfo.setTerm(resultSet.getString("term"));
     searchInfo.setTermCount(resultSet.getInt("count"));
+    searchInfo.setDocId(resultSet.getLong("doc_id"));
     return searchInfo;
   }
 }

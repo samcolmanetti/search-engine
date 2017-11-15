@@ -1,6 +1,8 @@
 package com.samjsoares.soar.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -9,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UrlUtil {
-
   private final static String VALID_CONTENT_TYPES_PATTERN
           = "(text/.*)|(application\\/xml)|(application\\/xhtml\\+xml)";
   private final static Matcher CONTENT_TYPE_MATCHER = Pattern.compile(VALID_CONTENT_TYPES_PATTERN).matcher("");
@@ -31,10 +32,8 @@ public class UrlUtil {
       if (uri != null) {
         return uri.toURL();
       }
-    } catch (MalformedURLException e) {
-      System.out.printf("Malformed URL: %s \n %s", url, e.toString());
     } catch (Exception e) {
-      System.out.printf("Unknown Exception in getCleanUrl: %s \n %s", url, e.toString());
+      // do nothing
     }
 
     return null;
@@ -51,7 +50,7 @@ public class UrlUtil {
                 null,
                 null);
     } catch (Exception e) {
-        System.out.printf("Failed to create URI for\'%s\': %s\n", url, e.toString());
+        //System.out.printf("Failed to create URI for\'%s\': %s\n", url, e.toString());
         return null;
     }
   }
@@ -81,7 +80,7 @@ public class UrlUtil {
     try {
         return new URL(url.getProtocol(), url.getAuthority(), url.getPort(), ROBOTS_TXT_PATH);
     } catch (Exception e) {
-        System.out.println("Failed to get robots.txt URL: " + e.toString());
+        //System.out.println("Failed to get robots.txt URL: " + e.toString());
     }
 
     return null;

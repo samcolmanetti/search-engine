@@ -8,6 +8,7 @@ import java.util.HashSet;
 import com.samjsoares.soar.constant.TimeConstants;
 import com.samjsoares.soar.util.CollectionsUtil;
 import com.samjsoares.soar.util.UrlUtil;
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 /**
@@ -52,10 +53,10 @@ public class InMemoryIndexer implements Indexer {
    * Add a page to the index.
    *
    * @param url        URL of the page.
-   * @param paragraphs Collection of elements that should be indexed.
+   * @param document Collection of elements that should be indexed.
    */
-  public void indexPage(String url, Elements paragraphs) {
-    if (paragraphs == null) {
+  public void indexPage(String url, Document document) {
+    if (document == null) {
       return;
     }
 
@@ -66,7 +67,7 @@ public class InMemoryIndexer implements Indexer {
 
     // make a TermProcessor and count the terms in the paragraphs
     TermProcessor tp = new TermProcessor(url);
-    tp.processElements(paragraphs);
+    tp.processElements(document.children());
 
     // for each term in the TermProcessor, add the TermProcessor to the index
     for (String term : tp.keySet()) {

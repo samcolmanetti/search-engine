@@ -2,12 +2,10 @@ package com.samjsoares.soar.core;
 
 import com.samjsoares.soar.constant.TimeConstants;
 import com.samjsoares.soar.dao.DocumentInfoDao;
-import com.samjsoares.soar.dao.DocumentInfoDaoImpl;
 import com.samjsoares.soar.dao.TermInfoDao;
-import com.samjsoares.soar.dao.TermInfoDaoImpl;
 import com.samjsoares.soar.model.DocumentInfo;
 import com.samjsoares.soar.util.UrlUtil;
-import org.jsoup.select.Elements;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,21 +25,29 @@ public class DatabaseIndexer implements Indexer {
   }
 
   @Override
-  public void indexPage(String url, Elements paragraphs) {
-    if (paragraphs == null) {
+  public void indexPage(String url, Document document) {
+    if (document == null) {
       return;
     }
 
     url = UrlUtil.getUrlString(url);
-
     if (url == null) {
       return;
     }
 
-    long docId = documentInfoDao.upsert(url, System.currentTimeMillis());
-    TermProcessor termProcessor = new TermProcessor(docId);
-    termProcessor.processElements(paragraphs);
+    DocumentProcessor documentProcessor = new DocumentProcessor(url, document);
+    long docId = documentInfoDao.upsert(
+        url,
+        System.currentTimeMillis(),
+        documentProcessor.getTitle(),
+        documentProcessor.getDescription());
 
+    if (docId <= 0) {
+      return;
+    }
+
+    TermProcessor termProcessor = new TermProcessor(docId);
+    termProcessor.processElements(documentProcessor.getElements());
     termInfoDao.upsert(docId, termProcessor.getTermInfos());
   }
 
@@ -63,12 +69,7 @@ public class DatabaseIndexer implements Indexer {
       return false;
     }
 
-    DocumentInfo documentInfo = documentInfoDao.get(url);
-    if (documentInfo == null) {
-      return true;
-    }
-
-    long nextIndexTime = documentInfo.getTimeIndexed() + TimeConstants.MS_PER_WEEK;
+    long nextIndexTime = documentInfoDao.getTimeIndexed(url) + TimeConstants.MS_PER_WEEK;
     return System.currentTimeMillis() > nextIndexTime;
   }
 

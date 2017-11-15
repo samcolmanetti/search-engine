@@ -26,8 +26,14 @@ public class TermInfoDaoImpl implements TermInfoDao {
 
   @Override
   public long upsert(TermInfo termInfo) {
-    Object[] params = new Object[] { termInfo.getDocId(), termInfo.getTerm(), termInfo.getCount() };
-    return jdbcTemplate.update(TermInfoSql.UPSERT, params);
+    try {
+      Object[] params = new Object[]{termInfo.getDocId(), termInfo.getTerm(), termInfo.getCount()};
+      return jdbcTemplate.update(TermInfoSql.UPSERT, params);
+    } catch (Exception e) {
+      logger.error("Failed to insert terminfo: %s \n Exception: %s", termInfo.toString(), e.getMessage());
+    }
+
+    return 0;
   }
 
   @Override

@@ -3,6 +3,7 @@ package com.samjsoares.soar.core;
 import java.util.Map;
 import java.util.Set;
 
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 /**
@@ -11,7 +12,7 @@ import org.jsoup.select.Elements;
  * @author soar
  */
 public interface Indexer {
-  void indexPage(String url, Elements paragraphs);
+  void indexPage(String url, Document document);
   Set<TermProcessor> get(String term);
   void printIndex();
   boolean shouldIndex(String url);
