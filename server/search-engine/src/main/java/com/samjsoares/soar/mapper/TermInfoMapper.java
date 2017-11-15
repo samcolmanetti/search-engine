@@ -10,7 +10,7 @@ public class TermInfoMapper implements RowMapper {
 
   private final static String COLUMN_DOC_ID = "doc_id";
   private final static String COLUMN_TERM = "term";
-  private final static String COLUMN_COUNT = "count";
+  private final static String COLUMN_COUNT = "frequency";
 
   @Override
   public Object mapRow(ResultSet resultSet, int i) throws SQLException {

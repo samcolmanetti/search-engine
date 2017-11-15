@@ -107,9 +107,10 @@ public class Crawler {
   private URL getNextUrl() {
     if (random.nextDouble() > 0.3) {
       return getNextUrlFromQueue();
-    } else {
-      return urlServer.getNextUrl();
     }
+
+    URL url = urlServer.getNextUrl();
+    return url != null ? url : getNextUrlFromQueue();
   }
 
   private URL getNextUrlFromQueue() {
