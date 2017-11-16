@@ -62,7 +62,11 @@ public class DocumentProcessor {
   }
 
   public String getDescription() {
-    String body = document.body().text();
+    if (document == null) {
+      return "";
+    }
+
+    String body = document.body() != null ? document.body().text() : "";
 
     if (StringUtils.isEmpty(body)) {
       return "";

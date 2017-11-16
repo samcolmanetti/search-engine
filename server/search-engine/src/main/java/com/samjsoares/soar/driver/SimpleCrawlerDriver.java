@@ -32,8 +32,15 @@ public class SimpleCrawlerDriver {
     int crawlCount = 0;
 
     logger.info("Starting crawler...");
+
     do {
-      continueCrawling = crawler.crawl(false);
+      try {
+        continueCrawling = crawler.crawl(false);
+      } catch (Exception e) {
+        continueCrawling = true;
+        crawlCount--;
+      }
+
       crawlCount++;
 
       logger.info("Crawled number: " + crawlCount);

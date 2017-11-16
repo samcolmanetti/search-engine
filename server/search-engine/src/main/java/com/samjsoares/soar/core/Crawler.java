@@ -105,7 +105,7 @@ public class Crawler {
   }
 
   private URL getNextUrl() {
-    if (random.nextDouble() > 0.3) {
+    if (random.nextDouble() > 0.30) {
       return getNextUrlFromQueue();
     }
 
