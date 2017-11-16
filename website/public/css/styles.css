@@ -1,0 +1,93 @@
+#logo-div
+{
+    /* center contents */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#middle .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+#bottom
+{
+    /* shrink bottom's font size */
+    font-size: smaller;
+
+    /* surround with whitespace */
+    margin: 20px;
+     
+    /* center contents */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+input{
+    border: none;
+    padding: 0px;
+    padding-left: 16px;
+    margin: 0px;
+    height: 34px;
+    line-height: 34px;
+    width: 500px;
+    border:1px solid #eaeaea;
+    outline: none;
+}
+input:hover{
+  border-color: #a0a0a0 #b9b9b9 #b9b9b9 #b9b9b9;
+}
+
+input:focus{
+    border-color:#4d90fe;
+}
+
+input[type="submit"] {
+    border-radius: 2px;
+    background: #f2f2f2;
+    border: 1px solid #f2f2f2;
+    color: #757575;
+    cursor: default;
+    font-size: 14px;
+    font-weight: bold;
+    width: 100px;
+    padding: 0 16px;
+    height:36px;
+}
+input[type="submit"]:hover {
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    background: #f8f8f8;
+    border: 1px solid #c6c6c6;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    color: #222;
+}
+
+#logo {
+  text-align: center;
+}
+
+.result {
+  padding: 10px;
+  max-width: 600px;
+}
+
+.title {
+  margin: 0;
+}
+
+.url {
+  margin: 0;
+  color: green;
+}
+
+.description {
+  margin: 0px;
+  font-size: small;
+  font-family: arial,sans-serif;
+}
