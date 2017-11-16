@@ -7,15 +7,35 @@ public class SearchInfo {
   private String term;
   private int termCount;
   private double pageRank;
+  private String title;
+  private String description;
 
   public SearchInfo() {}
 
-  public SearchInfo(long docId, String url, String term, int termCount, double pageRank) {
+  public SearchInfo(long docId, String url, String term, int termCount, double pageRank, String title, String description) {
     this.docId = docId;
     this.url = url;
     this.term = term;
     this.termCount = termCount;
     this.pageRank = pageRank;
+    this.title = title;
+    this.description = description;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public long getDocId() {

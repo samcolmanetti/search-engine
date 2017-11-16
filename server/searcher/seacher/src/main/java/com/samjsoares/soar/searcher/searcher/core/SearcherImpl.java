@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -26,10 +27,23 @@ public class SearcherImpl implements Searcher {
 
     List<SearchResult> results = new ArrayList<>(searchInfos.size());
     for (SearchInfo searchInfo : searchInfos) {
-      results.add(new SearchResult(searchInfo.getUrl(), searchInfo.getTermCount()));
+      results.add(new SearchResult(
+          searchInfo.getUrl(),
+          searchInfo.getTermCount(),
+          searchInfo.getTitle(),
+          searchInfo.getDescription()));
     }
 
     return results;
+  }
+
+  @Override
+  public List<SearchResult> search(String query) {
+    if (query == null) {
+      return Collections.emptyList();
+    }
+
+    return search(query.toLowerCase().split("\\s+"));
   }
 
 }

@@ -1,14 +1,22 @@
 package com.samjsoares.soar.searcher.searcher.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.google.gson.Gson;
+import com.samjsoares.soar.searcher.searcher.core.Searcher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SearchController {
 
-  @RequestMapping("/search")
-  public String index() {
-    return "Greetings from Spring Boot!";
+  @Autowired
+  private Searcher searcher;
+
+  private static Gson gson = new Gson();
+
+  @RequestMapping(value = "/api/search", method = RequestMethod.GET)
+  public String search(@RequestParam String query) {
+    String res = gson.toJson(searcher.search(query));
+    return res;
   }
 
 }
