@@ -1,6 +1,6 @@
-package com.samjsoares.soar.searcher.searcher.mapper;
+package com.samjsoares.soar.searcher.mapper;
 
-import com.samjsoares.soar.searcher.searcher.model.SearchInfo;
+import com.samjsoares.soar.searcher.model.SearchInfo;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

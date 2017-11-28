@@ -1,4 +1,4 @@
-package com.samjsoares.soar.searcher.searcher.model;
+package com.samjsoares.soar.searcher.model;
 
 public class SearchResult {
   private String url;

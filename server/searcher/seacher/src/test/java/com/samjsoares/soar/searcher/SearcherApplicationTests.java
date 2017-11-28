@@ -1,4 +1,4 @@
-package com.samjsoares.soar.searcher.seacher;
+package com.samjsoares.soar.searcher;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

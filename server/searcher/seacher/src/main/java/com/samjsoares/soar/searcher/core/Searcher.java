@@ -1,6 +1,6 @@
-package com.samjsoares.soar.searcher.searcher.core;
+package com.samjsoares.soar.searcher.core;
 
-import com.samjsoares.soar.searcher.searcher.model.SearchResult;
+import com.samjsoares.soar.searcher.model.SearchResult;
 
 import java.util.List;
 

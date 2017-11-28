@@ -1,8 +1,8 @@
-package com.samjsoares.soar.searcher.searcher.core;
+package com.samjsoares.soar.searcher.core;
 
-import com.samjsoares.soar.searcher.searcher.dao.SearchInfoDao;
-import com.samjsoares.soar.searcher.searcher.model.SearchInfo;
-import com.samjsoares.soar.searcher.searcher.model.SearchResult;
+import com.samjsoares.soar.searcher.dao.SearchInfoDao;
+import com.samjsoares.soar.searcher.model.SearchInfo;
+import com.samjsoares.soar.searcher.model.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

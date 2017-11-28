@@ -1,9 +1,8 @@
-package com.samjsoares.soar.searcher.searcher.dao;
+package com.samjsoares.soar.searcher.dao;
 
-import com.samjsoares.soar.searcher.searcher.constant.SearcherSQL;
-import com.samjsoares.soar.searcher.searcher.mapper.SearchInfoMapper;
-import com.samjsoares.soar.searcher.searcher.model.SearchInfo;
-import com.samjsoares.soar.searcher.searcher.model.SearchResult;
+import com.samjsoares.soar.searcher.constant.SearcherSQL;
+import com.samjsoares.soar.searcher.mapper.SearchInfoMapper;
+import com.samjsoares.soar.searcher.model.SearchInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

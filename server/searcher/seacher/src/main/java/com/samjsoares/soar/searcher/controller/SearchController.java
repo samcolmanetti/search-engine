@@ -1,7 +1,7 @@
-package com.samjsoares.soar.searcher.searcher.controller;
+package com.samjsoares.soar.searcher.controller;
 
 import com.google.gson.Gson;
-import com.samjsoares.soar.searcher.searcher.core.Searcher;
+import com.samjsoares.soar.searcher.core.Searcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
