@@ -23,11 +23,11 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="searchInfoDao" class="com.samjsoares.soar.searcher.searcher.dao.SearchInfoDaoImpl">
+    <bean id="searchInfoDao" class="com.samjsoares.soar.searcher.dao.SearchInfoDaoImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="searcher" class="com.samjsoares.soar.searcher.searcher.core.SearcherImpl">
+    <bean id="searcher" class="com.samjsoares.soar.searcher.core.SearcherImpl">
         <property name="searchInfoDao" ref="searchInfoDao" />
     </bean>
 
