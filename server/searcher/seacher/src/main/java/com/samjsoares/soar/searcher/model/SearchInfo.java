@@ -5,22 +5,13 @@ public class SearchInfo {
   private long docId;
   private String url;
   private String term;
-  private int termCount;
+  private int termFrequency;
   private double pageRank;
   private String title;
   private String description;
+  private long documentTermFrequency;
 
   public SearchInfo() {}
-
-  public SearchInfo(long docId, String url, String term, int termCount, double pageRank, String title, String description) {
-    this.docId = docId;
-    this.url = url;
-    this.term = term;
-    this.termCount = termCount;
-    this.pageRank = pageRank;
-    this.title = title;
-    this.description = description;
-  }
 
   public String getTitle() {
     return title;
@@ -62,12 +53,12 @@ public class SearchInfo {
     this.term = term;
   }
 
-  public int getTermCount() {
-    return termCount;
+  public int getTermFrequency() {
+    return termFrequency;
   }
 
-  public void setTermCount(int termCount) {
-    this.termCount = termCount;
+  public void setTermFrequency(int termFrequency) {
+    this.termFrequency = termFrequency;
   }
 
   public double getPageRank() {
@@ -76,5 +67,13 @@ public class SearchInfo {
 
   public void setPageRank(double pageRank) {
     this.pageRank = pageRank;
+  }
+
+  public long getDocumentTermFrequency() {
+    return documentTermFrequency;
+  }
+
+  public void setDocumentTermFrequency(long documentTermFrequency) {
+    this.documentTermFrequency = documentTermFrequency;
   }
 }
