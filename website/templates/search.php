@@ -5,7 +5,7 @@
 
 <?php
   $query = $_GET["q"];
-  $url = "localhost:8080/api/search?query=" . $_GET["q"];
+  $url = "localhost:8080/api/search?query=" . urlencode($_GET["q"]);
 
   $results = json_decode(curl($url));
   if (!empty($results)) {

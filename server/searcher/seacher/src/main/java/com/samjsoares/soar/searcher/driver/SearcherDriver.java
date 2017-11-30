@@ -1,5 +1,6 @@
 package com.samjsoares.soar.searcher.driver;
 
+import com.samjsoares.soar.searcher.constant.Regex;
 import com.samjsoares.soar.searcher.model.SearchResult;
 import com.samjsoares.soar.searcher.core.Searcher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class SearcherDriver {
         break;
       }
 
-      String[] terms = query.toLowerCase().split("\\s+");
+      String[] terms = query.toLowerCase().split(Regex.SPACE_OR_PLUS);
 
       List<SearchResult> results = searcher.search(terms);
 

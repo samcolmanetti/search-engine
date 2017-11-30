@@ -1,18 +1,20 @@
 package com.samjsoares.soar.searcher.core;
 
+import com.samjsoares.soar.searcher.constant.Regex;
 import com.samjsoares.soar.searcher.dao.SearchInfoDao;
 import com.samjsoares.soar.searcher.model.SearchInfo;
 import com.samjsoares.soar.searcher.model.SearchResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class SearcherImpl implements Searcher {
 
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private SearchInfoDao searchInfoDao;
 
   @Autowired
@@ -22,20 +24,18 @@ public class SearcherImpl implements Searcher {
 
   @Override
   public List<SearchResult> search(String[] terms) {
-    String term = terms.length > 0 ? terms[0] : "";
-    List<SearchInfo> searchInfos = searchInfoDao.getSearchInfo(term);
+    Ranker ranker = new TermFrequencyRanker();
 
-    List<SearchResult> results = new ArrayList<>(searchInfos.size());
-    for (SearchInfo searchInfo : searchInfos) {
-      results.add(new SearchResult(
-          searchInfo.getUrl(),
-          searchInfo.getTermCount(),
-          searchInfo.getTitle(),
-          searchInfo.getDescription()));
+    for (String term : terms) {
+      List<SearchInfo> searchInfoList = searchInfoDao.getSearchInfo(term);
+      if (searchInfoList != null && !searchInfoList.isEmpty()) {
+        ranker.add(searchInfoList);
+      }
     }
 
-    return results;
+    return ranker.getRankedResults();
   }
+
 
   @Override
   public List<SearchResult> search(String query) {
@@ -43,7 +43,8 @@ public class SearcherImpl implements Searcher {
       return Collections.emptyList();
     }
 
-    return search(query.toLowerCase().split("\\s+"));
+    logger.info("Query: " + query);
+    return search(query.toLowerCase().split(Regex.SPACE_OR_PLUS));
   }
 
 }
