@@ -75,7 +75,7 @@ public class TermFrequencyRanker implements Ranker {
           searchInfo.getDocumentTermFrequency() + " | tf-idf: " + tfIdf);
     }
 
-    return sum;
+    return sum * searchInfoList.size();
   }
 
   class RelevanceComparator implements Comparator<SearchResult> {
