@@ -18,7 +18,7 @@ public class DocumentProcessorTester {
 
   @Test
   public void testSimpleDescription() {
-    String sampleUrl = "http://www.wikipedia.org/wiki/Education";
+    String sampleUrl = "www.wikipedia.org/wiki/Education";
     Document doc = fetcher.fetchDocument(sampleUrl);
     DocumentProcessor documentProcessor = new DocumentProcessor(doc);
     assertThat(documentProcessor.getDescription() != null);
