@@ -58,11 +58,6 @@ public class UrlUtil {
   private static String cleanUpUrl (String url) {
     // replace spaces with html code %20
     url = StringUtils.replaceAll(url, "\\s", "%20");
-
-    if (shouldContainHttp(url)) {
-      url = "http://" + url;
-    }
-
     return url;
   }
 
@@ -73,8 +68,6 @@ public class UrlUtil {
 
     return !StringUtils.startsWith(url,"http") && !StringUtils.contains(url, "://");
   }
-
-
 
   public static URL getRobotsTxtURL (URL url) {
     try {
