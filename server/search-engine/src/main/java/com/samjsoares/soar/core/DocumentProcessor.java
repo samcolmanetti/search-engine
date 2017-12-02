@@ -1,12 +1,9 @@
 package com.samjsoares.soar.core;
 
-import com.samjsoares.soar.model.TermInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.util.Collections;
-import java.util.List;
 
 public class DocumentProcessor {
 
@@ -66,9 +63,15 @@ public class DocumentProcessor {
       return "";
     }
 
-    String body = document.body() != null ? document.body().text() : "";
+    String metaDescription = getDescriptionFromMetaTag();
+    if (metaDescription != null) {
+      return truncateWithElipsis(metaDescription);
+    }
 
-    if (StringUtils.isEmpty(body)) {
+    String body = "";
+    if (document != null && document.body().select("p") != null) {
+      body = document.body().select("p").first().text();
+    } else {
       return "";
     }
 
@@ -85,6 +88,17 @@ public class DocumentProcessor {
     }
 
     return truncateWithElipsis(description);
+  }
+
+  private String getDescriptionFromMetaTag() {
+    Elements elements = document.select("meta[description]");
+    for (Element element : elements) {
+      if (element.hasAttr("content")) {
+        return element.attr("content");
+      }
+    }
+
+    return null;
   }
 
   public Elements getElements() {

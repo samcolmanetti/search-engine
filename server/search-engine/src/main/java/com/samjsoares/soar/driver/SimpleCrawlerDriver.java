@@ -15,12 +15,10 @@ import java.util.Map;
 public class SimpleCrawlerDriver {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private Indexer indexer;
   private Crawler crawler;
 
   @Autowired
-  public SimpleCrawlerDriver(Indexer indexer, Crawler crawler){
-    this.indexer = indexer;
+  public SimpleCrawlerDriver(Crawler crawler){
     this.crawler = crawler;
   }
 
