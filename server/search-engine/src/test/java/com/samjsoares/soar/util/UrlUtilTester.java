@@ -91,7 +91,7 @@ public class UrlUtilTester {
   @Test
   public void testCleanUpUrl_differentProtocol() {
     String url = "ssh://134.198.168.101";
-    String expected = "ssh://134.198.168.101";
+    String expected = null;
 
     assertEquals(expected, UrlUtil.getUrlString(url));
   }
@@ -99,9 +99,17 @@ public class UrlUtilTester {
   @Test
   public void testCleanUpUrl_ipOnly() {
     String url = "134.198.168.101";
-    String expected = "http://134.198.168.101";
+    String expected = "http://134.198.168.101/";
 
     assertEquals(expected, UrlUtil.getUrlString(url));
+  }
+
+  @Test
+  public void testUrlKey_https() {
+    String url = "google.com";
+    String expected = "google.com/";
+
+    assertEquals(expected, UrlUtil.getUrlKey(url));
   }
 
 }
