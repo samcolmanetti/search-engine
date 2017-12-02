@@ -1,7 +1,12 @@
-<form action="/search.php" method="get">
-  <input autocomplete="false" type="text" name="q" value="<? echo $_GET["q"] ?>"/>
-  <input type="submit" value="Search">
-</form>
+<div id="search_bar" style="display: flex; align-items: center;">
+  <a href="/index.php"><img alt="Soar" src="/img/small_soar.png"/></a>
+  <span>
+    <form action="/search.php" method="get">
+      <input autocomplete="false" type="text" name="q" value="<? echo $_GET["q"] ?>"/>
+      <input type="submit" value="Search">
+    </form>
+  </span>
+</div>
 
 <?php
   $query = $_GET["q"];
