@@ -2,6 +2,11 @@ package com.samjsoares.soar.core;
 
 import com.samjsoares.soar.core.datastructure.LRUCacheMap;
 import com.samjsoares.soar.util.UrlUtil;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -9,17 +14,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
-
 @Component
 public class Fetcher {
-  private final static long MIN_INTERVAL = 1000;
-  private final static String SLASH = File.separator;
-  private final static String CHAR_SET = "UTF-16";
+  private static final long MIN_INTERVAL = 1000;
+  private static final String SLASH = File.separator;
+  private static final String CHAR_SET = "UTF-16";
 
   private Map<String, Long> lastRequestTimeMap = new LRUCacheMap<>(128);
 
@@ -65,7 +64,7 @@ public class Fetcher {
       return null;
     }
 
-    //saveToFile(doc, realUrl);
+    // saveToFile(doc, realUrl);
     return doc;
   }
 
@@ -170,9 +169,7 @@ public class Fetcher {
     lastRequestTimeMap.put(url.getHost(), time);
   }
 
-  /**
-   * Rate limits by waiting at least the minimum interval between requests.
-   */
+  /** Rate limits by waiting at least the minimum interval between requests. */
   private void sleepIfNeeded(URL url) {
     long lastRequestTime = getLastRequestTime(url);
 
@@ -182,7 +179,7 @@ public class Fetcher {
 
       if (currentTime < nextRequestTime) {
         try {
-          //System.out.println("Sleeping until " + nextRequestTime);
+          // System.out.println("Sleeping until " + nextRequestTime);
           Thread.sleep(nextRequestTime - currentTime);
         } catch (InterruptedException e) {
           System.err.println("Warning: sleep interrupted in Fetcher.");

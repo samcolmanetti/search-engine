@@ -6,7 +6,7 @@ public class UrlSeed {
 
   private String url;
 
-  public UrlSeed () {}
+  public UrlSeed() {}
 
   public long getId() {
     return id;

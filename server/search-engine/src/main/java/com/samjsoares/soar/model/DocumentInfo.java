@@ -51,12 +51,20 @@ public class DocumentInfo {
 
   @Override
   public String toString() {
-    return "DocumentInfo{" +
-        "id=" + id +
-        ", url='" + url + '\'' +
-        ", timeIndexed=" + timeIndexed +
-        ", title='" + title + '\'' +
-        ", description='" + description + '\'' +
-        '}';
+    return "DocumentInfo{"
+        + "id="
+        + id
+        + ", url='"
+        + url
+        + '\''
+        + ", timeIndexed="
+        + timeIndexed
+        + ", title='"
+        + title
+        + '\''
+        + ", description='"
+        + description
+        + '\''
+        + '}';
   }
 }

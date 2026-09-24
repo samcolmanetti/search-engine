@@ -4,14 +4,13 @@ import com.samjsoares.soar.searcher.constant.Regex;
 import com.samjsoares.soar.searcher.dao.SearchInfoDao;
 import com.samjsoares.soar.searcher.model.SearchInfo;
 import com.samjsoares.soar.searcher.model.SearchResult;
+import java.util.*;
 import opennlp.tools.stemmer.PorterStemmer;
 import opennlp.tools.stemmer.Stemmer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 @Component
 public class SearcherImpl implements Searcher {
@@ -59,5 +58,4 @@ public class SearcherImpl implements Searcher {
     logger.info("Query: " + query);
     return search(query.toLowerCase().split(Regex.SPACE_OR_PLUS));
   }
-
 }

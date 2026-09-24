@@ -2,14 +2,11 @@ package com.samjsoares.soar.searcher.core;
 
 import com.samjsoares.soar.searcher.model.SearchInfo;
 import com.samjsoares.soar.searcher.model.SearchResult;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-
-/**
- * This class ranks search results by Term Frequency.
- */
+/** This class ranks search results by Term Frequency. */
 public class TermFrequencyRanker implements Ranker {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -71,8 +68,15 @@ public class TermFrequencyRanker implements Ranker {
       double tfIdf = searchInfo.getTermFrequency() / (double) searchInfo.getDocumentTermFrequency();
       sum = sum + tfIdf;
 
-      logger.info("term: " + searchInfo.getTerm() + " | tf: " + searchInfo.getTermFrequency() + " | idf: " +
-          searchInfo.getDocumentTermFrequency() + " | tf-idf: " + tfIdf);
+      logger.info(
+          "term: "
+              + searchInfo.getTerm()
+              + " | tf: "
+              + searchInfo.getTermFrequency()
+              + " | idf: "
+              + searchInfo.getDocumentTermFrequency()
+              + " | tf-idf: "
+              + tfIdf);
     }
 
     return sum * searchInfoList.size();

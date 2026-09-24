@@ -13,8 +13,7 @@ public class SearchController {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  @Autowired
-  private Searcher searcher;
+  @Autowired private Searcher searcher;
 
   private static Gson gson = new Gson();
 
@@ -28,5 +27,4 @@ public class SearchController {
 
     return gson.toJson(searcher.search(query));
   }
-
 }

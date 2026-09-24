@@ -3,16 +3,15 @@ package com.samjsoares.soar.core;
 import com.panforge.robotstxt.RobotsTxt;
 import com.samjsoares.soar.core.datastructure.LRUCacheMap;
 import com.samjsoares.soar.util.UrlUtil;
-import org.springframework.stereotype.Component;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RobotsHandler {
 
-  private final static int CACHE_LIMIT = 128;
+  private static final int CACHE_LIMIT = 128;
 
   private Map<String, RobotsTxt> map = new LRUCacheMap<>(CACHE_LIMIT);
 
@@ -25,7 +24,7 @@ public class RobotsHandler {
 
     String key = getKey(url);
 
-    if (contains(key)){
+    if (contains(key)) {
       return get(key);
     }
 
@@ -35,12 +34,12 @@ public class RobotsHandler {
     }
 
     try (InputStream inputStream = robotsUrl.openStream()) {
-        RobotsTxt txt = RobotsTxt.read(inputStream);
-        map.put(key, txt);
-        return txt;
+      RobotsTxt txt = RobotsTxt.read(inputStream);
+      map.put(key, txt);
+      return txt;
     } catch (Exception exception) {
-        System.out.printf("Failed to find or parse RobotsTxt: %s\n", exception.toString());
-        map.put(key, null);
+      System.out.printf("Failed to find or parse RobotsTxt: %s\n", exception.toString());
+      map.put(key, null);
     }
 
     return null;
@@ -71,14 +70,11 @@ public class RobotsHandler {
       return false;
     }
 
-    RobotsTxt robotsTxt = contains(url)
-            ? get(url)
-            : add(url);
-
+    RobotsTxt robotsTxt = contains(url) ? get(url) : add(url);
 
     // robots.txt does not exist for domain - return true
     if (robotsTxt == null) {
-        return true;
+      return true;
     }
 
     try {
@@ -87,7 +83,5 @@ public class RobotsHandler {
       System.out.println("RobotsTxt query failed: " + e.toString());
       return false;
     }
-
   }
-
 }
