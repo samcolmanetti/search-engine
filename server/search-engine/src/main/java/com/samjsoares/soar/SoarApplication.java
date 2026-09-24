@@ -11,14 +11,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SoarApplication implements CommandLineRunner {
 
-  @Autowired
-  SimpleDbDriver simpleDbDriver;
+  @Autowired SimpleDbDriver simpleDbDriver;
 
-  @Autowired
-  SimpleIndexerDriver simpleIndexerDriver;
+  @Autowired SimpleIndexerDriver simpleIndexerDriver;
 
-  @Autowired
-  SimpleCrawlerDriver simpleCrawlerDriver;
+  @Autowired SimpleCrawlerDriver simpleCrawlerDriver;
 
   @Override
   public void run(String... strings) throws Exception {
@@ -28,5 +25,4 @@ public class SoarApplication implements CommandLineRunner {
   public static void main(String[] args) {
     SpringApplication.run(SoarApplication.class, args);
   }
-
 }

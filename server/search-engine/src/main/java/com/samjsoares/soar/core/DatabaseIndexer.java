@@ -3,14 +3,12 @@ package com.samjsoares.soar.core;
 import com.samjsoares.soar.constant.TimeConstants;
 import com.samjsoares.soar.dao.DocumentInfoDao;
 import com.samjsoares.soar.dao.TermInfoDao;
-import com.samjsoares.soar.model.DocumentInfo;
 import com.samjsoares.soar.util.UrlUtil;
+import java.util.Map;
+import java.util.Set;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.Set;
 
 @Component
 public class DatabaseIndexer implements Indexer {
@@ -36,11 +34,12 @@ public class DatabaseIndexer implements Indexer {
     }
 
     DocumentProcessor documentProcessor = new DocumentProcessor(url, document);
-    long docId = documentInfoDao.upsert(
-        url,
-        System.currentTimeMillis(),
-        documentProcessor.getTitle(),
-        documentProcessor.getDescription());
+    long docId =
+        documentInfoDao.upsert(
+            url,
+            System.currentTimeMillis(),
+            documentProcessor.getTitle(),
+            documentProcessor.getDescription());
 
     if (docId <= 0) {
       return;
@@ -58,9 +57,7 @@ public class DatabaseIndexer implements Indexer {
   }
 
   @Override
-  public void printIndex() {
-
-  }
+  public void printIndex() {}
 
   @Override
   public boolean shouldIndex(String url) {

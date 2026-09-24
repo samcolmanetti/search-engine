@@ -2,6 +2,10 @@ package com.samjsoares.soar.core;
 
 import com.samjsoares.soar.core.datastructure.LRUCacheSet;
 import com.samjsoares.soar.util.UrlUtil;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -10,36 +14,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
-
 @Component
 public class Crawler {
-  /**
-   * URL of where we started crawling
-   */
-  //private final URL source;
+  /** URL of where we started crawling */
+  // private final URL source;
 
-  /**
-   * Where the results are stored
-   */
+  /** Where the results are stored */
   private Indexer indexer;
 
-  /**
-   * Queue of URLs to may be indexed
-   */
+  /** Queue of URLs to may be indexed */
   private Queue<URL> queue = new LinkedList<>();
 
-  /**
-   * Fetcher used to get pages
-   */
+  /** Fetcher used to get pages */
   private Fetcher fetcher;
 
-  /**
-   * Handler class that determines whether we can crawl a certain directory
-   */
+  /** Handler class that determines whether we can crawl a certain directory */
   private RobotsHandler robotsHandler;
 
   private URLServer urlServer;
@@ -51,7 +40,8 @@ public class Crawler {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  public Crawler(Indexer indexer, Fetcher fetcher, RobotsHandler robotsHandler, URLServer urlServer) {
+  public Crawler(
+      Indexer indexer, Fetcher fetcher, RobotsHandler robotsHandler, URLServer urlServer) {
     this.indexer = indexer;
     this.fetcher = fetcher;
     this.robotsHandler = robotsHandler;
@@ -92,9 +82,8 @@ public class Crawler {
     }
 
     logger.info("Crawling " + url);
-    Document document = !offline
-        ? fetcher.fetchDocument(url.toString())
-        : fetcher.readDocument(url.toString());
+    Document document =
+        !offline ? fetcher.fetchDocument(url.toString()) : fetcher.readDocument(url.toString());
 
     if (document != null) {
       indexer.indexPage(url.toString(), document);
@@ -122,7 +111,7 @@ public class Crawler {
     return url;
   }
 
-  private void addInternalLinks (URL url) {
+  private void addInternalLinks(URL url) {
     Elements paragraphs = fetcher.fetch(url.toString());
     queueInternalLinks(paragraphs);
   }
@@ -163,5 +152,4 @@ public class Crawler {
 
     return false;
   }
-
 }
