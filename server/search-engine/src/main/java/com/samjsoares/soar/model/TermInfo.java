@@ -46,10 +46,6 @@ public class TermInfo {
 
   @Override
   public String toString() {
-    return "TermInfo{" +
-        "docId=" + docId +
-        ", term='" + term + '\'' +
-        ", count=" + count +
-        '}';
+    return "TermInfo{" + "docId=" + docId + ", term='" + term + '\'' + ", count=" + count + '}';
   }
 }

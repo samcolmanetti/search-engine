@@ -6,16 +6,16 @@ public class LRUCacheSet<T> {
 
   private LRUCacheMap<T, Object> lruCacheMap;
 
-  private final static int DEFAULT_LIMIT = 128;
+  private static final int DEFAULT_LIMIT = 128;
   private final int limit;
 
   public LRUCacheSet() {
-    lruCacheMap = new LRUCacheMap<> (DEFAULT_LIMIT);
+    lruCacheMap = new LRUCacheMap<>(DEFAULT_LIMIT);
     this.limit = DEFAULT_LIMIT;
   }
 
   public LRUCacheSet(int limit) {
-    lruCacheMap = new LRUCacheMap<> (limit);
+    lruCacheMap = new LRUCacheMap<>(limit);
     this.limit = limit;
   }
 
@@ -34,5 +34,4 @@ public class LRUCacheSet<T> {
   public boolean add(T t) {
     return lruCacheMap.put(t, PRESENT) == null;
   }
-
 }

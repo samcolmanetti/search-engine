@@ -12,33 +12,23 @@ public class SimpleDbDriver {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  @Autowired
-  private DocumentInfoDao documentInfoDao;
+  @Autowired private DocumentInfoDao documentInfoDao;
 
   public void runSimpleRead() {
     logger.info("runSimpleRead results: " + documentInfoDao.get("youtube.com"));
   }
 
-  public  void runSimpleInsert() {
+  public void runSimpleInsert() {
     long time1 = System.currentTimeMillis();
 
     documentInfoDao.upsert(
-        "sam1.com",
-        System.currentTimeMillis(),
-        "sam1",
-        "this is the description for sam1");
+        "sam1.com", System.currentTimeMillis(), "sam1", "this is the description for sam1");
 
     documentInfoDao.upsert(
-        "sam2.com",
-        System.currentTimeMillis(),
-        "sam2",
-        "this is the description for sam2");
+        "sam2.com", System.currentTimeMillis(), "sam2", "this is the description for sam2");
 
     documentInfoDao.upsert(
-        "sam3.com",
-        System.currentTimeMillis(),
-        "sam3",
-        "this is the description for sam3");
+        "sam3.com", System.currentTimeMillis(), "sam3", "this is the description for sam3");
 
     long time2 = System.currentTimeMillis();
 
@@ -51,5 +41,4 @@ public class SimpleDbDriver {
       logger.info(info.toString());
     }
   }
-
 }

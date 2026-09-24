@@ -23,5 +23,4 @@ public class TestConfig {
   ScaledStemmer scaledStemmer() {
     return new ScaledStemmer();
   }
-
 }

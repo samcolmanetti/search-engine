@@ -1,12 +1,11 @@
 package com.samjsoares.soar.searcher.mapper;
 
 import com.samjsoares.soar.searcher.model.SearchInfo;
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.jdbc.core.RowMapper;
 
-public class SearchInfoMapper implements RowMapper{
+public class SearchInfoMapper implements RowMapper {
 
   @Override
   public Object mapRow(ResultSet resultSet, int i) throws SQLException {

@@ -3,15 +3,14 @@ package com.samjsoares.soar.searcher.dao;
 import com.samjsoares.soar.searcher.constant.SearcherSQL;
 import com.samjsoares.soar.searcher.mapper.SearchInfoMapper;
 import com.samjsoares.soar.searcher.model.SearchInfo;
+import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
-import java.util.List;
-
 @Component
-public class SearchInfoDaoImpl implements SearchInfoDao{
+public class SearchInfoDaoImpl implements SearchInfoDao {
 
   private JdbcTemplate jdbcTemplate;
 
@@ -22,7 +21,7 @@ public class SearchInfoDaoImpl implements SearchInfoDao{
 
   @Override
   public List<SearchInfo> getSearchInfo(String term) {
-    Object[] params = new Object[] { term, term };
+    Object[] params = new Object[] {term, term};
     return jdbcTemplate.query(SearcherSQL.SELECT_BY_TERM, params, new SearchInfoMapper());
   }
 }

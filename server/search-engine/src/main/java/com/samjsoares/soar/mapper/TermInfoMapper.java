@@ -1,16 +1,15 @@
 package com.samjsoares.soar.mapper;
 
 import com.samjsoares.soar.model.TermInfo;
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.jdbc.core.RowMapper;
 
 public class TermInfoMapper implements RowMapper {
 
-  private final static String COLUMN_DOC_ID = "doc_id";
-  private final static String COLUMN_TERM = "term";
-  private final static String COLUMN_COUNT = "frequency";
+  private static final String COLUMN_DOC_ID = "doc_id";
+  private static final String COLUMN_TERM = "term";
+  private static final String COLUMN_COUNT = "frequency";
 
   @Override
   public Object mapRow(ResultSet resultSet, int i) throws SQLException {

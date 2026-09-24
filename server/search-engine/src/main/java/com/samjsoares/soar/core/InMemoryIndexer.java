@@ -1,15 +1,13 @@
 package com.samjsoares.soar.core;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
-
 import com.samjsoares.soar.constant.TimeConstants;
 import com.samjsoares.soar.util.CollectionsUtil;
 import com.samjsoares.soar.util.UrlUtil;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 /**
  * Encapsulates a map from search term to set of TermProcessor.
@@ -52,7 +50,7 @@ public class InMemoryIndexer implements Indexer {
   /**
    * Add a page to the index.
    *
-   * @param url        URL of the page.
+   * @param url URL of the page.
    * @param document Collection of elements that should be indexed.
    */
   public void indexPage(String url, Document document) {
@@ -77,9 +75,7 @@ public class InMemoryIndexer implements Indexer {
     timeIndexed.put(url, System.currentTimeMillis());
   }
 
-  /**
-   * Prints the contents of the index.
-   */
+  /** Prints the contents of the index. */
   public void printIndex() {
     // loop through the search terms
     for (String term : keySet()) {
@@ -126,5 +122,4 @@ public class InMemoryIndexer implements Indexer {
 
     return counts;
   }
-
 }
