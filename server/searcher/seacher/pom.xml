@@ -80,6 +80,56 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!-- Formatter: google-java-format via Spotless.
+					`mvn spotless:apply` reformats; `mvn verify` fails on unformatted code. -->
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>3.10.2</version>
+				<configuration>
+					<java>
+						<googleJavaFormat>
+							<version>1.36.1</version>
+							<style>GOOGLE</style>
+						</googleJavaFormat>
+					</java>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Linter: Checkstyle with Google's ruleset (google_checks.xml ships with Checkstyle).
+					`mvn checkstyle:check` prints violations. They are warnings for now, so they don't fail the build. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.6.0</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>14.1.0</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<configLocation>google_checks.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>checkstyle</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
