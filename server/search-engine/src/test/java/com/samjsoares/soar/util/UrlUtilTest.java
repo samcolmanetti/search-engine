@@ -2,13 +2,14 @@ package com.samjsoares.soar.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.junit.Test;
 
-public class UrlUtilTester {
+public class UrlUtilTest {
 
   @Test
   public void testContentType_text() {
@@ -109,5 +110,97 @@ public class UrlUtilTester {
     String expected = "google.com/";
 
     assertEquals(expected, UrlUtil.getUrlKey(url));
+  }
+
+  @Test
+  public void testContentType_textPlain() {
+    assertTrue(UrlUtil.isValidContentType("text/plain"));
+  }
+
+  @Test
+  public void testContentType_json() {
+    assertFalse(UrlUtil.isValidContentType("application/json"));
+  }
+
+  @Test
+  public void testCleanUrl_stripsFragment() {
+    assertEquals(
+        "http://example.com/page", UrlUtil.getCleanUrl("http://example.com/page#top").toString());
+  }
+
+  @Test
+  public void testCleanUrl_stripsQuery() {
+    assertEquals(
+        "http://example.com/page",
+        UrlUtil.getCleanUrl("http://example.com/page?a=1&b=2").toString());
+  }
+
+  @Test
+  public void testCleanUrl_forcesHttp() {
+    assertEquals(
+        "http://example.com/secure", UrlUtil.getCleanUrl("https://example.com/secure").toString());
+  }
+
+  @Test
+  public void testCleanUrl_addsMissingScheme() {
+    assertEquals("http://example.com/page", UrlUtil.getCleanUrl("example.com/page").toString());
+  }
+
+  @Test
+  public void testCleanUrl_encodesSpaces() {
+    assertEquals(
+        "http://example.com/a%20b%20c",
+        UrlUtil.getCleanUrl("http://example.com/a b\tc").toString());
+  }
+
+  @Test
+  public void testCleanUrl_addsRootPath() {
+    assertEquals("http://example.com/", UrlUtil.getCleanUrl("example.com").toString());
+  }
+
+  @Test
+  public void testCleanUrl_lowercasesHost() {
+    assertEquals(
+        "http://example.com/Path", UrlUtil.getCleanUrl("http://EXAMPLE.com/Path").toString());
+  }
+
+  @Test
+  public void testCleanUrl_invalid() {
+    assertNull(UrlUtil.getCleanUrl("http://"));
+    assertNull(UrlUtil.getCleanUrl("ssh://134.198.168.101"));
+    assertNull(UrlUtil.getCleanUrl("http://exa mple.com/"));
+  }
+
+  @Test
+  public void testUrlKey_dropsSchemeQueryAndFragment() {
+    assertEquals("example.com/a/b", UrlUtil.getUrlKey("https://example.com/a/b?q=1#frag"));
+  }
+
+  @Test
+  public void testUrlKey_invalid() {
+    assertNull(UrlUtil.getUrlKey("ssh://example.com"));
+  }
+
+  @Test
+  public void testUrlString_httpsAndHttpAreSame() {
+    assertEquals(
+        UrlUtil.getUrlString("http://example.com/page"),
+        UrlUtil.getUrlString("https://example.com/page"));
+  }
+
+  @Test
+  public void testUrlString_invalid() {
+    assertNull(UrlUtil.getUrlString("http://"));
+  }
+
+  @Test
+  public void testRobotsTxtUrl_dropsPathAndQuery() throws MalformedURLException {
+    URL url = new URL("http://example.com/deep/path/page.html?x=1#y");
+    assertEquals("http://example.com/robots.txt", UrlUtil.getRobotsTxtURL(url).toString());
+  }
+
+  @Test
+  public void testRobotsTxtUrl_null() {
+    assertNull(UrlUtil.getRobotsTxtURL(null));
   }
 }
