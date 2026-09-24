@@ -1,0 +1,5 @@
+# Formatting-only commits, skipped by `git blame`.
+# Enable locally with: git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Apply google-java-format to all Java sources
+a3a1fd877b1b84376833143dac5664840c10bba6
