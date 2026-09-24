@@ -1,10 +1,9 @@
 package com.samjsoares.soar.core;
 
 import com.samjsoares.soar.core.datastructure.LRUCacheMap;
-import opennlp.tools.stemmer.Stemmer;
-import opennlp.tools.stemmer.PorterStemmer;
-
 import java.util.Map;
+import opennlp.tools.stemmer.PorterStemmer;
+import opennlp.tools.stemmer.Stemmer;
 
 public class ScaledStemmer {
 
@@ -27,5 +26,4 @@ public class ScaledStemmer {
 
     return stemmed;
   }
-
 }

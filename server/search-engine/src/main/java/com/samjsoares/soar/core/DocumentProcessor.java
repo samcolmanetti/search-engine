@@ -7,9 +7,9 @@ import org.jsoup.select.Elements;
 
 public class DocumentProcessor {
 
-  private final static String SENTENCE_REGEX = "^\\s+[A-Za-z,;'\"\\s]+[.?!]$";
-  private final static int MAX_DESCRIPTION = 240;
-  private final static String ELLIPSIS = "\u2026";
+  private static final String SENTENCE_REGEX = "^\\s+[A-Za-z,;'\"\\s]+[.?!]$";
+  private static final int MAX_DESCRIPTION = 240;
+  private static final String ELLIPSIS = "\u2026";
 
   private Document document;
   private long documentId;
@@ -105,8 +105,7 @@ public class DocumentProcessor {
     return this.document.children();
   }
 
-  private String truncateWithElipsis (String text) {
-    return StringUtils.substring(text, 0, MAX_DESCRIPTION-1) + ELLIPSIS;
+  private String truncateWithElipsis(String text) {
+    return StringUtils.substring(text, 0, MAX_DESCRIPTION - 1) + ELLIPSIS;
   }
-
 }

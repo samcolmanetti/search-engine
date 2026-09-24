@@ -1,15 +1,10 @@
 package com.samjsoares.soar.driver;
 
 import com.samjsoares.soar.core.Crawler;
-import com.samjsoares.soar.core.InMemoryIndexer;
-import com.samjsoares.soar.core.Indexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.Map;
 
 @Component
 public class SimpleCrawlerDriver {
@@ -18,7 +13,7 @@ public class SimpleCrawlerDriver {
   private Crawler crawler;
 
   @Autowired
-  public SimpleCrawlerDriver(Crawler crawler){
+  public SimpleCrawlerDriver(Crawler crawler) {
     this.crawler = crawler;
   }
 

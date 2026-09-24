@@ -3,15 +3,14 @@ package com.samjsoares.soar.dao;
 import com.samjsoares.soar.constant.TermInfoSql;
 import com.samjsoares.soar.mapper.TermInfoMapper;
 import com.samjsoares.soar.model.TermInfo;
+import java.util.List;
+import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
-import java.util.List;
 
 @Component
 public class TermInfoDaoImpl implements TermInfoDao {
@@ -27,10 +26,11 @@ public class TermInfoDaoImpl implements TermInfoDao {
   @Override
   public long upsert(TermInfo termInfo) {
     try {
-      Object[] params = new Object[]{termInfo.getDocId(), termInfo.getTerm(), termInfo.getCount()};
+      Object[] params = new Object[] {termInfo.getDocId(), termInfo.getTerm(), termInfo.getCount()};
       return jdbcTemplate.update(TermInfoSql.UPSERT, params);
     } catch (Exception e) {
-      logger.error("Failed to insert terminfo: %s \n Exception: %s", termInfo.toString(), e.getMessage());
+      logger.error(
+          "Failed to insert terminfo: %s \n Exception: %s", termInfo.toString(), e.getMessage());
     }
 
     return 0;
@@ -39,7 +39,7 @@ public class TermInfoDaoImpl implements TermInfoDao {
   @Override
   @Transactional
   public int upsert(long docId, List<TermInfo> termInfos) {
-    jdbcTemplate.update(TermInfoSql.DELETE_ALL_FROM_DOC, new Object[] { docId });
+    jdbcTemplate.update(TermInfoSql.DELETE_ALL_FROM_DOC, new Object[] {docId});
 
     int affectedRows = 0;
     for (int i = 0; i < termInfos.size(); i++) {
@@ -52,7 +52,7 @@ public class TermInfoDaoImpl implements TermInfoDao {
 
   @Override
   public TermInfo get(long documentId, String term) {
-    Object[] params = new Object[] { documentId, term };
+    Object[] params = new Object[] {documentId, term};
     List<TermInfo> termInfos = jdbcTemplate.query(TermInfoSql.SELECT, params, new TermInfoMapper());
 
     if (termInfos.size() != 1) {
@@ -63,15 +63,17 @@ public class TermInfoDaoImpl implements TermInfoDao {
 
   @Override
   public List<TermInfo> getAll(long documentId) {
-    Object[] params = new Object[] { documentId };
-    List<TermInfo> termInfos = jdbcTemplate.query(TermInfoSql.SELECT_FROM_DOC, params, new TermInfoMapper());
+    Object[] params = new Object[] {documentId};
+    List<TermInfo> termInfos =
+        jdbcTemplate.query(TermInfoSql.SELECT_FROM_DOC, params, new TermInfoMapper());
     return termInfos;
   }
 
   @Override
   public List<TermInfo> getAll() {
     Object[] params = new Object[] {};
-    List<TermInfo> termInfos = jdbcTemplate.query(TermInfoSql.SELECT_ALL, params, new TermInfoMapper());
+    List<TermInfo> termInfos =
+        jdbcTemplate.query(TermInfoSql.SELECT_ALL, params, new TermInfoMapper());
     return termInfos;
   }
 }

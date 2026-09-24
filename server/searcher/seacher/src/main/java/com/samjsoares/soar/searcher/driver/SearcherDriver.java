@@ -1,13 +1,12 @@
 package com.samjsoares.soar.searcher.driver;
 
 import com.samjsoares.soar.searcher.constant.Regex;
-import com.samjsoares.soar.searcher.model.SearchResult;
 import com.samjsoares.soar.searcher.core.Searcher;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.samjsoares.soar.searcher.model.SearchResult;
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SearcherDriver {

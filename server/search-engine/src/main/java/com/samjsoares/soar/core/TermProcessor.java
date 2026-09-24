@@ -4,21 +4,19 @@ import com.samjsoares.soar.model.TermInfo;
 import com.samjsoares.soar.util.CollectionsUtil;
 import com.samjsoares.soar.util.NodeIterable;
 import com.samjsoares.soar.util.StopWordsUtil;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Encapsulates a map from search term to TermInfo.
  *
  * @author soar
  */
-
 public class TermProcessor {
 
   private Map<String, TermInfo> map = new HashMap<>();
@@ -99,7 +97,7 @@ public class TermProcessor {
     }
   }
 
-  private boolean shouldProcessTerm (String term) {
+  private boolean shouldProcessTerm(String term) {
     if (StringUtils.isBlank(term)) {
       return false;
     }
@@ -177,21 +175,17 @@ public class TermProcessor {
   }
 
   public List<TermInfo> getTermInfos() {
-   return new ArrayList<>(map.values());
+    return new ArrayList<>(map.values());
   }
 
-  /**
-   * Print the terms and their counts in arbitrary order.
-   */
+  /** Print the terms and their counts in arbitrary order. */
   public void printCounts() {
     Map<String, TermInfo> sortedMap =
         map.entrySet().stream()
             .sorted(Map.Entry.comparingByValue(new TermInfoCountOrderComparator()))
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                Map.Entry::getValue,
-                (e1, e2) -> e1,
-                LinkedHashMap::new));
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
     for (String key : sortedMap.keySet()) {
       Integer count = getTermCount(key);
@@ -214,7 +208,7 @@ public class TermProcessor {
    */
   public static void main(String[] args) throws IOException {
     String url = "https://en.wikipedia.org/wiki/University_of_Scranton";
-    //String url = "https://www.scranton.edu";
+    // String url = "https://www.scranton.edu";
 
     Fetcher wf = new Fetcher();
     Elements paragraphs = wf.fetch(url);
