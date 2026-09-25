@@ -7,6 +7,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 
 public class UrlUtilTest {
@@ -202,5 +208,36 @@ public class UrlUtilTest {
   @Test
   public void testRobotsTxtUrl_null() {
     assertNull(UrlUtil.getRobotsTxtURL(null));
+  }
+
+  @Test
+  public void testContentTypeCheckIsThreadSafe() throws Exception {
+    int threads = 8;
+    int checksPerThread = 20_000;
+    ExecutorService pool = Executors.newFixedThreadPool(threads);
+    AtomicInteger wrongAnswers = new AtomicInteger();
+    try {
+      List<Future<?>> futures = new ArrayList<>();
+      for (int t = 0; t < threads; t++) {
+        boolean valid = t % 2 == 0;
+        String contentType = valid ? "text/html; charset=UTF-8" : "image/png";
+        futures.add(
+            pool.submit(
+                () -> {
+                  for (int i = 0; i < checksPerThread; i++) {
+                    if (UrlUtil.isValidContentType(contentType) != valid) {
+                      wrongAnswers.incrementAndGet();
+                    }
+                  }
+                }));
+      }
+      for (Future<?> future : futures) {
+        future.get();
+      }
+    } finally {
+      pool.shutdownNow();
+    }
+
+    assertEquals(0, wrongAnswers.get());
   }
 }
