@@ -36,13 +36,14 @@ public class TermFrequencyRanker implements Ranker {
       return Collections.emptyList();
     }
 
-    PriorityQueue<SearchResult> heap = new PriorityQueue<>(map.size(), new RelevanceComparator());
+    List<SearchResult> results = new ArrayList<>(map.size());
 
     for (List<SearchInfo> list : map.values()) {
-      heap.add(getSearchResult(list));
+      results.add(getSearchResult(list));
     }
 
-    return new ArrayList<>(heap);
+    results.sort(new RelevanceComparator());
+    return results;
   }
 
   private SearchResult getSearchResult(List<SearchInfo> searchInfoList) {
@@ -86,11 +87,8 @@ public class TermFrequencyRanker implements Ranker {
 
     @Override
     public int compare(SearchResult o1, SearchResult o2) {
-      if (o2.getRelevance() > o1.getRelevance()) {
-        return 1;
-      }
-
-      return -1;
+      // Highest relevance first.
+      return Double.compare(o2.getRelevance(), o1.getRelevance());
     }
   }
 }
