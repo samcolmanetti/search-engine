@@ -52,9 +52,8 @@ public class CrawlerTest {
     @Override
     public boolean isAllowed(URL url) {
       if (url == null) {
-        // Known bug: see openspec/changes/fix-known-bugs (#2). Crawler polls forever once the
-        // queue runs out, so fail loudly instead of hanging if a test ever gets here.
-        throw new AssertionError("Crawler polled an empty queue");
+        // Same as the real RobotsHandler.
+        return false;
       }
       return !disallowedPaths.contains(url.getPath());
     }
@@ -157,6 +156,23 @@ public class CrawlerTest {
     assertThat(crawler.crawl(false)).isFalse();
 
     assertThat(indexer.indexed).containsExactly(HOME, PAGE_B);
+  }
+
+  @Test(timeout = 5000)
+  public void testQueueOfDisallowedUrlsDrainsAndStops() {
+    fetcher.serve(HOME, "links.html");
+    robotsHandler.disallowedPaths.add("/a");
+    robotsHandler.disallowedPaths.add("/b");
+    Crawler crawler = crawler(seeds(HOME));
+
+    assertThat(crawler.crawl(false)).isTrue();
+    // /a and /b are queued but both disallowed, so the queue drains without crawling anything.
+    assertThat(crawler.crawl(false)).isTrue();
+    assertThat(crawler.queueSize()).isZero();
+    // Nothing left in the queue or the seeds.
+    assertThat(crawler.crawl(false)).isFalse();
+
+    assertThat(indexer.indexed).containsExactly(HOME);
   }
 
   @Test
