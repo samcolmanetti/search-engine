@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -21,7 +21,7 @@ public class URLServerImplTest {
     }
 
     @Override
-    public <T> T queryForObject(String sql, Object[] args, Class<T> requiredType) {
+    public <T> T queryForObject(String sql, Class<T> requiredType, Object... args) {
       int id = ((Long) args[0]).intValue();
       if (id < 1 || id > seeds.size()) {
         throw new EmptyResultDataAccessException(1);

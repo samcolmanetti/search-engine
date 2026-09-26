@@ -1,23 +1,23 @@
 package com.samjsoares.soar.util;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class StopWordsUtilTest {
 
   @Test
   public void testCommonStopWords() {
     for (String word : new String[] {"a", "the", "and", "of", "is", "with", "yourselves"}) {
-      assertTrue(word, StopWordsUtil.isStopWord(word));
+      assertTrue(StopWordsUtil.isStopWord(word), word);
     }
   }
 
   @Test
   public void testRealWordsAreNotStopWords() {
     for (String word : new String[] {"search", "engine", "crawler", "university", "java"}) {
-      assertFalse(word, StopWordsUtil.isStopWord(word));
+      assertFalse(StopWordsUtil.isStopWord(word), word);
     }
   }
 

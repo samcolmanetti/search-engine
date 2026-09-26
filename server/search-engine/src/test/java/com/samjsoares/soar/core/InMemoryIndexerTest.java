@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class InMemoryIndexerTest {
 

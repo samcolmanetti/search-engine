@@ -8,15 +8,18 @@ import com.samjsoares.soar.searcher.model.SearchResult;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class SearchControllerTest {
 
-  /** Returns one fixed result and records queries. */
+  /** Returns fixed results (one example page by default) and records queries. */
   private static class FakeSearcher implements Searcher {
     final List<String> queries = new ArrayList<>();
+    List<SearchResult> results =
+        Collections.singletonList(
+            new SearchResult("http://example.com/", 0.5, "Example", "An example page"));
 
     @Override
     public List<SearchResult> search(String[] terms) {
@@ -26,15 +29,14 @@ public class SearchControllerTest {
     @Override
     public List<SearchResult> search(String query) {
       queries.add(query);
-      return Collections.singletonList(
-          new SearchResult("http://example.com/", 0.5, "Example", "An example page"));
+      return results;
     }
   }
 
   private final FakeSearcher searcher = new FakeSearcher();
   private final SearchController controller = new SearchController();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     ReflectionTestUtils.setField(controller, "searcher", searcher);
   }
@@ -49,6 +51,14 @@ public class SearchControllerTest {
   public void testNullQueryReturnsEmptyObject() {
     assertThat(controller.search(null)).isEqualTo("{}");
     assertThat(searcher.queries).isEmpty();
+  }
+
+  @Test
+  public void testNoResultsReturnsEmptyArray() {
+    // The ranker returns Collections.emptyList() when nothing matches.
+    searcher.results = Collections.emptyList();
+
+    assertThat(controller.search("nonexistentword")).isEqualTo("[]");
   }
 
   @Test

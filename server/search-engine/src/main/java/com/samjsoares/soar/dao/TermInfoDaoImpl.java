@@ -53,7 +53,7 @@ public class TermInfoDaoImpl implements TermInfoDao {
   @Override
   public TermInfo get(long documentId, String term) {
     Object[] params = new Object[] {documentId, term};
-    List<TermInfo> termInfos = jdbcTemplate.query(TermInfoSql.SELECT, params, new TermInfoMapper());
+    List<TermInfo> termInfos = jdbcTemplate.query(TermInfoSql.SELECT, new TermInfoMapper(), params);
 
     if (termInfos.size() != 1) {
       return null;
@@ -65,7 +65,7 @@ public class TermInfoDaoImpl implements TermInfoDao {
   public List<TermInfo> getAll(long documentId) {
     Object[] params = new Object[] {documentId};
     List<TermInfo> termInfos =
-        jdbcTemplate.query(TermInfoSql.SELECT_FROM_DOC, params, new TermInfoMapper());
+        jdbcTemplate.query(TermInfoSql.SELECT_FROM_DOC, new TermInfoMapper(), params);
     return termInfos;
   }
 
@@ -73,7 +73,7 @@ public class TermInfoDaoImpl implements TermInfoDao {
   public List<TermInfo> getAll() {
     Object[] params = new Object[] {};
     List<TermInfo> termInfos =
-        jdbcTemplate.query(TermInfoSql.SELECT_ALL, params, new TermInfoMapper());
+        jdbcTemplate.query(TermInfoSql.SELECT_ALL, new TermInfoMapper(), params);
     return termInfos;
   }
 }

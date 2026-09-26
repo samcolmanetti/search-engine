@@ -1,6 +1,7 @@
 package com.samjsoares.soar.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,7 +11,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NodeIterableTest {
 
@@ -41,17 +42,17 @@ public class NodeIterableTest {
     assertThat(iterator.hasNext()).isFalse();
   }
 
-  @Test(expected = NoSuchElementException.class)
+  @Test
   public void testNextPastEndThrows() {
     Iterator<Node> iterator = new NodeIterable(new TextNode("leaf", "")).iterator();
     iterator.next();
-    iterator.next();
+    assertThrows(NoSuchElementException.class, () -> iterator.next());
   }
 
-  @Test(expected = UnsupportedOperationException.class)
+  @Test
   public void testRemoveThrows() {
     Iterator<Node> iterator = new NodeIterable(root()).iterator();
     iterator.next();
-    iterator.remove();
+    assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
   }
 }

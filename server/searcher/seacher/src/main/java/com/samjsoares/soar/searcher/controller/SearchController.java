@@ -21,7 +21,7 @@ public class SearchController {
   public String search(@RequestParam String query) {
     logger.info("Query (controller): " + query);
 
-    if (StringUtils.isEmpty(query)) {
+    if (!StringUtils.hasLength(query)) {
       return gson.toJson(new Object());
     }
 
