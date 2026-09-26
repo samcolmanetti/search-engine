@@ -109,7 +109,7 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
     }
 
     List<DocumentInfo> documentInfos =
-        (List<DocumentInfo>) jdbcTemplate.query(sql, params, new DocumentInfoMapper());
+        (List<DocumentInfo>) jdbcTemplate.query(sql, new DocumentInfoMapper(), params);
 
     if (documentInfos.size() != 1) {
       return null;
@@ -123,7 +123,7 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
     Object[] params = new Object[] {url};
 
     try {
-      return jdbcTemplate.queryForObject(DocumentInfoSql.SELECT_ID, params, Long.class);
+      return jdbcTemplate.queryForObject(DocumentInfoSql.SELECT_ID, Long.class, params);
     } catch (Exception e) {
       return -1;
     }
@@ -134,7 +134,7 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
     Object[] params = new Object[] {url};
 
     try {
-      return jdbcTemplate.queryForObject(DocumentInfoSql.SELECT_TIME_INDEXED, params, Long.class);
+      return jdbcTemplate.queryForObject(DocumentInfoSql.SELECT_TIME_INDEXED, Long.class, params);
     } catch (Exception e) {
       return -1;
     }
@@ -143,6 +143,6 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
   @Override
   public List<DocumentInfo> getAll() {
     return (List<DocumentInfo>)
-        jdbcTemplate.query(DocumentInfoSql.SELECT_ALL, new Object[] {}, new DocumentInfoMapper());
+        jdbcTemplate.query(DocumentInfoSql.SELECT_ALL, new DocumentInfoMapper());
   }
 }

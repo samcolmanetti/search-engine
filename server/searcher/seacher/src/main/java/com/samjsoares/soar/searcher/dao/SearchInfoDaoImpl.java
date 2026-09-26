@@ -22,6 +22,6 @@ public class SearchInfoDaoImpl implements SearchInfoDao {
   @Override
   public List<SearchInfo> getSearchInfo(String term) {
     Object[] params = new Object[] {term, term};
-    return jdbcTemplate.query(SearcherSQL.SELECT_BY_TERM, params, new SearchInfoMapper());
+    return jdbcTemplate.query(SearcherSQL.SELECT_BY_TERM, new SearchInfoMapper(), params);
   }
 }

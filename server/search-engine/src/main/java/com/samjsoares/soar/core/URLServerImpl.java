@@ -31,14 +31,13 @@ public class URLServerImpl implements URLServer {
     String url;
     try {
       url =
-          jdbcTemplate.queryForObject(
-              "select url from url_seed where id = ?", new Object[] {index}, String.class);
+          jdbcTemplate.queryForObject("select url from url_seed where id = ?", String.class, index);
     } catch (EmptyResultDataAccessException e) {
       // Past the last seed. Leave the index where it is so later calls also return null.
       return null;
     }
 
-    jdbcTemplate.update("update url_seed_index set index = ?", new Object[] {index + 1});
+    jdbcTemplate.update("update url_seed_index set index = ?", index + 1);
 
     return UrlUtil.getCleanUrl(url);
   }
