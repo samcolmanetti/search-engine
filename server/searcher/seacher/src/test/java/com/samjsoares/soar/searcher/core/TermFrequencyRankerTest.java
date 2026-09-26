@@ -15,8 +15,6 @@ public class TermFrequencyRankerTest {
 
   private static final double EPSILON = 1e-9;
 
-  // Known bug: see openspec/changes/fix-known-bugs (#1). Results are not sorted by relevance, so
-  // these tests never assert result order. They compare results by URL instead.
   private static Map<String, SearchResult> byUrl(List<SearchResult> results) {
     Map<String, SearchResult> map = new HashMap<>();
     for (SearchResult result : results) {
@@ -56,6 +54,37 @@ public class TermFrequencyRankerTest {
     assertThat(results.get("http://example.com/1").getRelevance())
         .isCloseTo((0.2 + 0.25) * 2, within(EPSILON));
     assertThat(results.get("http://example.com/2").getRelevance()).isCloseTo(0.5, within(EPSILON));
+  }
+
+  @Test
+  public void testResultsAreSortedByRelevanceDescending() {
+    Ranker ranker = new TermFrequencyRanker();
+    ranker.add(
+        Arrays.asList(
+            row(1, "java", 1, 10),
+            row(2, "java", 2, 10),
+            row(3, "java", 3, 10),
+            row(4, "java", 4, 10),
+            row(5, "java", 5, 10)));
+
+    List<SearchResult> results = ranker.getRankedResults();
+
+    assertThat(results)
+        .extracting(SearchResult::getUrl)
+        .containsExactly(
+            "http://example.com/5",
+            "http://example.com/4",
+            "http://example.com/3",
+            "http://example.com/2",
+            "http://example.com/1");
+  }
+
+  @Test
+  public void testEqualRelevanceKeepsAllResults() {
+    Ranker ranker = new TermFrequencyRanker();
+    ranker.add(Arrays.asList(row(1, "java", 1, 2), row(2, "java", 1, 2), row(3, "java", 1, 2)));
+
+    assertThat(byUrl(ranker.getRankedResults())).hasSize(3);
   }
 
   @Test

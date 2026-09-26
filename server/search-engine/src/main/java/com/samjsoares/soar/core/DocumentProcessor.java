@@ -1,5 +1,7 @@
 package com.samjsoares.soar.core;
 
+import java.util.Arrays;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -7,7 +9,10 @@ import org.jsoup.select.Elements;
 
 public class DocumentProcessor {
 
-  private static final String SENTENCE_REGEX = "^\\s+[A-Za-z,;'\"\\s]+[.?!]$";
+  /** Whitespace that follows the end of a sentence. */
+  private static final Pattern SENTENCE_BREAK = Pattern.compile("(?<=[.?!])\\s+");
+
+  private static final int MAX_SENTENCES = 2;
   private static final int MAX_DESCRIPTION = 240;
   private static final String ELLIPSIS = "\u2026";
 
@@ -55,9 +60,13 @@ public class DocumentProcessor {
   }
 
   public String getTitle() {
-    return document.title();
+    return document != null ? document.title() : "";
   }
 
+  /**
+   * Returns the page's meta description, or else the first one or two sentences of its first
+   * paragraph. Text longer than {@value #MAX_DESCRIPTION} characters is cut short with an ellipsis.
+   */
   public String getDescription() {
     if (document == null) {
       return "";
@@ -65,33 +74,30 @@ public class DocumentProcessor {
 
     String metaDescription = getDescriptionFromMetaTag();
     if (metaDescription != null) {
-      return truncateWithElipsis(metaDescription);
+      return truncateWithEllipsis(metaDescription);
     }
 
-    String body = "";
-    if (document != null && document.body().select("p") != null) {
-      body = document.body().select("p").first().text();
-    } else {
+    Element body = document.body();
+    Element firstParagraph = body != null ? body.select("p").first() : null;
+    if (firstParagraph == null) {
       return "";
     }
 
-    final int indexOfFirst = StringUtils.indexOf(body, SENTENCE_REGEX);
-    final int indexOfSecond = StringUtils.indexOf(body, SENTENCE_REGEX, indexOfFirst);
+    return truncateWithEllipsis(firstSentences(firstParagraph.text()));
+  }
 
-    String description;
-    if (indexOfSecond > 0) {
-      description = StringUtils.substring(body, 0, indexOfSecond);
-    } else if (indexOfFirst > 0) {
-      description = StringUtils.substring(body, 0, indexOfFirst);
-    } else {
-      description = body;
+  private static String firstSentences(String text) {
+    String trimmed = text.trim();
+    String[] sentences = SENTENCE_BREAK.split(trimmed, MAX_SENTENCES + 1);
+    if (sentences.length <= MAX_SENTENCES) {
+      return trimmed;
     }
 
-    return truncateWithElipsis(description);
+    return String.join(" ", Arrays.copyOf(sentences, MAX_SENTENCES));
   }
 
   private String getDescriptionFromMetaTag() {
-    Elements elements = document.select("meta[description]");
+    Elements elements = document.select("meta[name=description]");
     for (Element element : elements) {
       if (element.hasAttr("content")) {
         return element.attr("content");
@@ -105,7 +111,11 @@ public class DocumentProcessor {
     return this.document.children();
   }
 
-  private String truncateWithElipsis(String text) {
+  private static String truncateWithEllipsis(String text) {
+    if (text.length() <= MAX_DESCRIPTION) {
+      return text;
+    }
+
     return StringUtils.substring(text, 0, MAX_DESCRIPTION - 1) + ELLIPSIS;
   }
 }

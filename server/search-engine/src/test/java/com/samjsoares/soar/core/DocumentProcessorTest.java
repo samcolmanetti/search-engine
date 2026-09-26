@@ -33,35 +33,44 @@ public class DocumentProcessorTest {
   }
 
   @Test
-  public void testDescriptionComesFromFirstParagraph() {
-    String description = processor("article.html").getDescription();
-
-    // Known bug: see openspec/changes/fix-known-bugs (#3). The sentence regex never matches, so
-    // the whole first paragraph is used, and an ellipsis is always appended. Only assert the
-    // parts that hold before and after the fix.
-    assertThat(description).startsWith("A search engine crawls pages and builds an index.");
-    assertThat(description).doesNotContain("second paragraph");
-    assertThat(description.length()).isLessThanOrEqualTo(MAX_DESCRIPTION);
+  public void testDescriptionIsFirstParagraphWhenItHasTwoSentences() {
+    assertThat(processor("article.html").getDescription())
+        .isEqualTo(
+            "A search engine crawls pages and builds an index. "
+                + "It then ranks the pages for each query.");
   }
 
   @Test
-  public void testLongDescriptionIsTruncatedWithEllipsis() {
-    String description = processor("long-paragraph.html").getDescription();
+  public void testDescriptionStopsAfterTwoSentences() {
+    assertThat(processor("long-paragraph.html").getDescription())
+        .isEqualTo(
+            "Crawlers visit pages and follow every link they find. "
+                + "Crawlers visit pages and follow every link they find.");
+  }
 
-    assertThat(description.length()).isLessThanOrEqualTo(MAX_DESCRIPTION);
-    assertThat(description).startsWith("Crawlers visit pages and follow every link they find.");
+  @Test
+  public void testLongSentenceIsTruncatedWithEllipsis() {
+    String description = processor("long-sentence.html").getDescription();
+
+    assertThat(description).hasSize(MAX_DESCRIPTION);
+    assertThat(description).startsWith("This single sentence keeps going");
     assertThat(description).endsWith("…");
   }
 
   @Test
   public void testDescriptionFromMetaTag() {
-    // Known bug: see openspec/changes/fix-known-bugs (#3). Only the non-standard
-    // <meta description> attribute is matched today, not <meta name="description">. The fixture
-    // tag has both, so this passes before and after the fix.
-    String description = processor("meta-description.html").getDescription();
+    assertThat(processor("meta-description.html").getDescription())
+        .isEqualTo("Description from the meta tag.");
+  }
 
-    assertThat(description).startsWith("Description from the meta tag.");
-    assertThat(description).doesNotContain("Paragraph text");
+  @Test
+  public void testPageWithoutParagraphsHasEmptyDescription() {
+    assertThat(processor("no-paragraph.html").getDescription()).isEmpty();
+  }
+
+  @Test
+  public void testNullDocumentHasEmptyTitle() {
+    assertThat(new DocumentProcessor(null).getTitle()).isEmpty();
   }
 
   @Test

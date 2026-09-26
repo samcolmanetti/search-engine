@@ -138,7 +138,7 @@ public class TermProcessor {
     if (termInfo == null) {
       termInfo = new TermInfo();
       termInfo.setDocId(documentId);
-      termInfo.setTerm(term);
+      termInfo.setTerm(scaledStemmer.stem(term));
     }
 
     termInfo.setCount(count);

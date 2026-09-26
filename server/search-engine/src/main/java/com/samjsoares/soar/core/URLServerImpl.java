@@ -4,6 +4,7 @@ import com.samjsoares.soar.util.UrlUtil;
 import java.net.URL;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,11 @@ public class URLServerImpl implements URLServer {
 
   @Autowired
   public URLServerImpl(DataSource dataSource) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    this(new JdbcTemplate(dataSource));
+  }
+
+  URLServerImpl(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
   }
 
   @Override
@@ -23,9 +28,15 @@ public class URLServerImpl implements URLServer {
   public URL getNextUrl() {
     long index = jdbcTemplate.queryForObject("select index from url_seed_index", Long.class);
 
-    String url =
-        jdbcTemplate.queryForObject(
-            "select url from url_seed where id = ?", new Object[] {index}, String.class);
+    String url;
+    try {
+      url =
+          jdbcTemplate.queryForObject(
+              "select url from url_seed where id = ?", new Object[] {index}, String.class);
+    } catch (EmptyResultDataAccessException e) {
+      // Past the last seed. Leave the index where it is so later calls also return null.
+      return null;
+    }
 
     jdbcTemplate.update("update url_seed_index set index = ?", new Object[] {index + 1});
 

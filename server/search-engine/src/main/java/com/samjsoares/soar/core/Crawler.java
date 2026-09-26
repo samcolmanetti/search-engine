@@ -75,6 +75,12 @@ public class Crawler {
 
     URL url = getNextUrl();
 
+    if (url == null) {
+      // Every queued URL was disallowed. The next call refills the queue from the seeds.
+      logger.info("No crawlable URL left in the queue");
+      return true;
+    }
+
     if (!indexer.shouldIndex(url.toString())) {
       logger.debug("Already indexed " + url);
       addInternalLinks(url);
@@ -102,11 +108,12 @@ public class Crawler {
     return url != null ? url : getNextUrlFromQueue();
   }
 
+  /** Returns the next queued URL that robots.txt allows, or null once the queue runs out. */
   private URL getNextUrlFromQueue() {
     URL url;
     do {
       url = queue.poll();
-    } while (!robotsHandler.isAllowed(url));
+    } while (url != null && !robotsHandler.isAllowed(url));
 
     return url;
   }

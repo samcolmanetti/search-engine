@@ -2,15 +2,14 @@ package com.samjsoares.soar.util;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 public class UrlUtil {
   private static final String VALID_CONTENT_TYPES_PATTERN =
       "(text/.*)|(application\\/xml)|(application\\/xhtml\\+xml)";
-  private static final Matcher CONTENT_TYPE_MATCHER =
-      Pattern.compile(VALID_CONTENT_TYPES_PATTERN).matcher("");
+  // A Pattern is thread-safe; a Matcher is not, so each call makes its own.
+  private static final Pattern CONTENT_TYPE_PATTERN = Pattern.compile(VALID_CONTENT_TYPES_PATTERN);
 
   private static final String ROBOTS_TXT_PATH = "/robots.txt";
 
@@ -97,6 +96,6 @@ public class UrlUtil {
 
   public static boolean isValidContentType(String contentType) {
     contentType = StringUtils.substringBefore(contentType, ";");
-    return CONTENT_TYPE_MATCHER.reset(contentType).matches();
+    return CONTENT_TYPE_PATTERN.matcher(contentType).matches();
   }
 }
