@@ -14,9 +14,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class SearchControllerTest {
 
-  /** Returns one fixed result and records queries. */
+  /** Returns fixed results (one example page by default) and records queries. */
   private static class FakeSearcher implements Searcher {
     final List<String> queries = new ArrayList<>();
+    List<SearchResult> results =
+        Collections.singletonList(
+            new SearchResult("http://example.com/", 0.5, "Example", "An example page"));
 
     @Override
     public List<SearchResult> search(String[] terms) {
@@ -26,8 +29,7 @@ public class SearchControllerTest {
     @Override
     public List<SearchResult> search(String query) {
       queries.add(query);
-      return Collections.singletonList(
-          new SearchResult("http://example.com/", 0.5, "Example", "An example page"));
+      return results;
     }
   }
 
@@ -49,6 +51,14 @@ public class SearchControllerTest {
   public void testNullQueryReturnsEmptyObject() {
     assertThat(controller.search(null)).isEqualTo("{}");
     assertThat(searcher.queries).isEmpty();
+  }
+
+  @Test
+  public void testNoResultsReturnsEmptyArray() {
+    // The ranker returns Collections.emptyList() when nothing matches.
+    searcher.results = Collections.emptyList();
+
+    assertThat(controller.search("nonexistentword")).isEqualTo("[]");
   }
 
   @Test
