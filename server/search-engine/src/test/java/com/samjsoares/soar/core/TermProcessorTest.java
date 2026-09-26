@@ -54,10 +54,15 @@ public class TermProcessorTest {
 
     assertThat(termInfos).hasSize(1);
     assertThat(termInfos.get(0).getCount()).isEqualTo(3);
-    // Known bug: see openspec/changes/fix-known-bugs (#6). The stored term is the first raw word,
-    // not the stem, so only assert that it is one of the forms.
-    assertThat(termInfos.get(0).getTerm()).isIn("crawling", "crawled", "crawl");
+    // The stem is stored, so every page indexes these words under the same term.
+    assertThat(termInfos.get(0).getTerm()).isEqualTo("crawl");
     assertThat(processor.get("crawls").getCount()).isEqualTo(3);
+  }
+
+  @Test
+  public void testStoredTermDoesNotDependOnWordOrder() {
+    assertThat(process("<p>universities</p>").getTermInfos().get(0).getTerm())
+        .isEqualTo(process("<p>university</p>").getTermInfos().get(0).getTerm());
   }
 
   @Test
