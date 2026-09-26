@@ -2,6 +2,9 @@ package com.samjsoares.soar.util;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,16 +16,17 @@ public class UrlUtil {
 
   private static final String ROBOTS_TXT_PATH = "/robots.txt";
 
+  /**
+   * Returns a key that identifies a page regardless of scheme, query, or fragment, so the http and
+   * https versions of a page share a key. Returns null for an invalid URL.
+   */
   public static String getUrlKey(String urlString) {
-    try {
-      URL url = getCleanUrl(urlString);
-      if (url != null) {
-        return url.getHost() + url.getPath();
-      }
-    } catch (Exception e) {
-    }
+    return getUrlKey(getCleanUrl(urlString));
+  }
 
-    return null;
+  /** Same as {@link #getUrlKey(String)} for an already-parsed URL. */
+  public static String getUrlKey(URL url) {
+    return url != null ? url.getHost() + url.getPath() : null;
   }
 
   public static String getUrlString(String url) {
@@ -33,6 +37,24 @@ public class UrlUtil {
     }
 
     return uri.toString();
+  }
+
+  /**
+   * Returns the cleaned URL followed by the same URL with the other scheme, for an http or https
+   * URL. Returns just the cleaned URL for other schemes, and an empty list for an invalid URL.
+   */
+  public static List<String> getHttpAndHttpsUrlStrings(String urlString) {
+    String url = getUrlString(urlString);
+    if (url == null) {
+      return Collections.emptyList();
+    }
+    if (url.startsWith("https://")) {
+      return Arrays.asList(url, "http://" + url.substring("https://".length()));
+    }
+    if (url.startsWith("http://")) {
+      return Arrays.asList(url, "https://" + url.substring("http://".length()));
+    }
+    return Collections.singletonList(url);
   }
 
   private static java.net.URI getUri(String url) {
@@ -62,14 +84,9 @@ public class UrlUtil {
     // replace spaces with html code %20
     url = StringUtils.replaceAll(url, "\\s", "%20");
 
-    // force http
-    if (StringUtils.startsWith(url, "https://")) {
-      url = StringUtils.replaceFirst(url, "https://", "http://");
-    }
-
-    // verify http protocol is used
+    // default to https when no scheme is given
     if (!StringUtils.contains(url, "://")) {
-      url = "http://" + url;
+      url = "https://" + url;
     }
 
     return url;
