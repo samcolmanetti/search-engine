@@ -240,4 +240,10 @@ public class UrlUtilTest {
 
     assertEquals(0, wrongAnswers.get());
   }
+
+  @Test
+  public void testRobotsTxtUrl_keepsExplicitPort() throws Exception {
+    URL url = new URL("http://localhost:8080/deep/path/page.html?x=1#y");
+    assertEquals("http://localhost:8080/robots.txt", UrlUtil.getRobotsTxtURL(url).toString());
+  }
 }

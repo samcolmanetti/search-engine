@@ -85,8 +85,8 @@ public class UrlUtil {
 
   public static java.net.URL getRobotsTxtURL(java.net.URL url) {
     try {
-      return new java.net.URL(
-          url.getProtocol(), url.getAuthority(), url.getPort(), ROBOTS_TXT_PATH);
+      // getHost, not getAuthority: the authority includes the port, which is passed separately.
+      return new java.net.URL(url.getProtocol(), url.getHost(), url.getPort(), ROBOTS_TXT_PATH);
     } catch (Exception e) {
       // System.out.println("Failed to get robots.txt URL: " + e.toString());
     }
