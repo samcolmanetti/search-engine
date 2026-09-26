@@ -2,6 +2,6 @@
 // configuration
 require("../includes/config.php");
 
-render("search.php", ["title" => $_GET["q"]]);
+render("search.php", ["title" => isset($_GET["q"]) ? $_GET["q"] : ""]);
 
  ?>
