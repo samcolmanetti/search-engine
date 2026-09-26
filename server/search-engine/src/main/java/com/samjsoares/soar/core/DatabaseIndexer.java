@@ -4,6 +4,7 @@ import com.samjsoares.soar.constant.TimeConstants;
 import com.samjsoares.soar.dao.DocumentInfoDao;
 import com.samjsoares.soar.dao.TermInfoDao;
 import com.samjsoares.soar.util.UrlUtil;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.jsoup.nodes.Document;
@@ -61,12 +62,18 @@ public class DatabaseIndexer implements Indexer {
 
   @Override
   public boolean shouldIndex(String url) {
-    url = UrlUtil.getUrlString(url);
-    if (url == null) {
+    List<String> urls = UrlUtil.getHttpAndHttpsUrlStrings(url);
+    if (urls.isEmpty()) {
       return false;
     }
 
-    long nextIndexTime = documentInfoDao.getTimeIndexed(url) + TimeConstants.MS_PER_WEEK;
+    // A page indexed over either http or https counts as indexed.
+    long lastIndexedTime = -1;
+    for (String candidate : urls) {
+      lastIndexedTime = Math.max(lastIndexedTime, documentInfoDao.getTimeIndexed(candidate));
+    }
+
+    long nextIndexTime = lastIndexedTime + TimeConstants.MS_PER_WEEK;
     return System.currentTimeMillis() > nextIndexTime;
   }
 

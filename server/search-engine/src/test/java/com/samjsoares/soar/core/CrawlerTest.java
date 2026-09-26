@@ -158,6 +158,30 @@ public class CrawlerTest {
     assertThat(indexer.indexed).containsExactly(HOME, PAGE_B);
   }
 
+  @Test
+  public void testHttpAndHttpsLinksToSamePageAreQueuedOnce() {
+    fetcher.serve(HOME, "mixed-schemes.html");
+    Crawler crawler = crawler(seeds(HOME));
+
+    assertThat(crawler.crawl(false)).isTrue();
+
+    // /a is linked over both http and https; https://example.com/ is the seed itself.
+    assertThat(crawler.queueSize()).isEqualTo(1);
+  }
+
+  @Test
+  public void testHttpsLinkKeepsItsScheme() {
+    fetcher.serve(HOME, "mixed-schemes.html").serve("https://example.com/a", "leaf.html");
+    Crawler crawler = crawler(seeds(HOME));
+
+    while (crawler.crawl(false)) {
+      assertThat(indexer.indexed.size()).as("pages indexed").isLessThanOrEqualTo(2);
+    }
+
+    // The https link came first on the page, so that's the version that was fetched.
+    assertThat(indexer.indexed).containsExactly(HOME, "https://example.com/a");
+  }
+
   @Test(timeout = 5000)
   public void testQueueOfDisallowedUrlsDrainsAndStops() {
     fetcher.serve(HOME, "links.html");

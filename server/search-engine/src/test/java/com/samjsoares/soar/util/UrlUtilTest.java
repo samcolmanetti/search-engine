@@ -89,7 +89,7 @@ public class UrlUtilTest {
   @Test
   public void testCleanUpUrl_noHttp() {
     String url = "www.google.com/search?q=josh+david";
-    String expected = "http://www.google.com/search";
+    String expected = "https://www.google.com/search";
 
     assertEquals(expected, UrlUtil.getUrlString(url));
   }
@@ -105,7 +105,7 @@ public class UrlUtilTest {
   @Test
   public void testCleanUpUrl_ipOnly() {
     String url = "134.198.168.101";
-    String expected = "http://134.198.168.101/";
+    String expected = "https://134.198.168.101/";
 
     assertEquals(expected, UrlUtil.getUrlString(url));
   }
@@ -142,14 +142,20 @@ public class UrlUtilTest {
   }
 
   @Test
-  public void testCleanUrl_forcesHttp() {
+  public void testCleanUrl_keepsHttps() {
     assertEquals(
-        "http://example.com/secure", UrlUtil.getCleanUrl("https://example.com/secure").toString());
+        "https://example.com/secure", UrlUtil.getCleanUrl("https://example.com/secure").toString());
+  }
+
+  @Test
+  public void testCleanUrl_keepsHttp() {
+    assertEquals(
+        "http://example.com/plain", UrlUtil.getCleanUrl("http://example.com/plain").toString());
   }
 
   @Test
   public void testCleanUrl_addsMissingScheme() {
-    assertEquals("http://example.com/page", UrlUtil.getCleanUrl("example.com/page").toString());
+    assertEquals("https://example.com/page", UrlUtil.getCleanUrl("example.com/page").toString());
   }
 
   @Test
@@ -161,7 +167,7 @@ public class UrlUtilTest {
 
   @Test
   public void testCleanUrl_addsRootPath() {
-    assertEquals("http://example.com/", UrlUtil.getCleanUrl("example.com").toString());
+    assertEquals("https://example.com/", UrlUtil.getCleanUrl("example.com").toString());
   }
 
   @Test
@@ -183,15 +189,40 @@ public class UrlUtilTest {
   }
 
   @Test
+  public void testUrlKey_sameForHttpAndHttps() {
+    assertEquals(
+        UrlUtil.getUrlKey("http://example.com/page"),
+        UrlUtil.getUrlKey("https://example.com/page"));
+    assertEquals(
+        UrlUtil.getUrlKey("http://example.com/page"),
+        UrlUtil.getUrlKey(UrlUtil.getCleanUrl("https://example.com/page")));
+  }
+
+  @Test
+  public void testUrlKey_nullUrl() {
+    assertNull(UrlUtil.getUrlKey((URL) null));
+  }
+
+  @Test
   public void testUrlKey_invalid() {
     assertNull(UrlUtil.getUrlKey("ssh://example.com"));
   }
 
   @Test
-  public void testUrlString_httpsAndHttpAreSame() {
+  public void testUrlString_keepsScheme() {
+    assertEquals("http://example.com/page", UrlUtil.getUrlString("http://example.com/page"));
+    assertEquals("https://example.com/page", UrlUtil.getUrlString("https://example.com/page"));
+  }
+
+  @Test
+  public void testHttpAndHttpsUrlStrings() {
     assertEquals(
-        UrlUtil.getUrlString("http://example.com/page"),
-        UrlUtil.getUrlString("https://example.com/page"));
+        java.util.Arrays.asList("https://example.com/page", "http://example.com/page"),
+        UrlUtil.getHttpAndHttpsUrlStrings("https://example.com/page?q=1"));
+    assertEquals(
+        java.util.Arrays.asList("http://example.com/page", "https://example.com/page"),
+        UrlUtil.getHttpAndHttpsUrlStrings("http://example.com/page"));
+    assertTrue(UrlUtil.getHttpAndHttpsUrlStrings("ssh://example.com").isEmpty());
   }
 
   @Test

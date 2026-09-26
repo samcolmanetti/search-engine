@@ -33,7 +33,11 @@ public class Crawler {
 
   private URLServer urlServer;
 
-  private LRUCacheSet<URL> cache = new LRUCacheSet<>(512);
+  /**
+   * Keys of recently queued URLs, from {@link UrlUtil#getUrlKey(URL)}, so the http and https
+   * versions of a page are queued once.
+   */
+  private LRUCacheSet<String> cache = new LRUCacheSet<>(512);
 
   private Random random = new Random();
 
@@ -148,12 +152,12 @@ public class Crawler {
   }
 
   private boolean enqueueUrl(URL url) {
-    if (url == null || cache.contains(url)) {
+    if (url == null || cache.contains(UrlUtil.getUrlKey(url))) {
       return false;
     }
 
     if (queue.offer(url)) {
-      cache.add(url);
+      cache.add(UrlUtil.getUrlKey(url));
       return true;
     }
 

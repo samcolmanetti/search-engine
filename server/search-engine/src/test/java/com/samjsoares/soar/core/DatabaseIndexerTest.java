@@ -17,7 +17,7 @@ import org.junit.Test;
 public class DatabaseIndexerTest {
 
   private static final String URL = "https://example.com/article?ref=1";
-  private static final String CLEAN_URL = "http://example.com/article";
+  private static final String CLEAN_URL = "https://example.com/article";
 
   /** Records upserts and returns a fixed id. */
   private static class FakeDocumentInfoDao implements DocumentInfoDao {
@@ -169,6 +169,13 @@ public class DatabaseIndexerTest {
   @Test
   public void testShouldNotIndexRecentlyIndexedUrl() {
     documentInfoDao.timeIndexed.put(CLEAN_URL, System.currentTimeMillis());
+
+    assertThat(indexer.shouldIndex(URL)).isFalse();
+  }
+
+  @Test
+  public void testShouldNotIndexPageRecentlyIndexedOverTheOtherScheme() {
+    documentInfoDao.timeIndexed.put("http://example.com/article", System.currentTimeMillis());
 
     assertThat(indexer.shouldIndex(URL)).isFalse();
   }

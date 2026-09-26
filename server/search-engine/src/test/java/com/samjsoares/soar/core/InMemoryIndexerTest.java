@@ -11,7 +11,7 @@ import org.junit.Test;
 public class InMemoryIndexerTest {
 
   private static final String URL = "https://example.com/page?q=1";
-  private static final String CLEAN_URL = "http://example.com/page";
+  private static final String CLEAN_URL = "https://example.com/page";
 
   private static Document document(String text) {
     return Jsoup.parse("<html><body><p>" + text + "</p></body></html>");
@@ -63,6 +63,8 @@ public class InMemoryIndexerTest {
 
     assertThat(indexer.shouldIndex(URL)).isFalse();
     assertThat(indexer.shouldIndex(CLEAN_URL)).isFalse();
+    // The http version of the same page counts as indexed too.
+    assertThat(indexer.shouldIndex("http://example.com/page")).isFalse();
   }
 
   @Test

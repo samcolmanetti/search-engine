@@ -17,6 +17,8 @@ import org.jsoup.nodes.Document;
 public class InMemoryIndexer implements Indexer {
 
   private Map<String, Set<TermProcessor>> index = new HashMap<>();
+
+  /** Last indexed time by {@link UrlUtil#getUrlKey(String)}, so http and https share an entry. */
   private Map<String, Long> timeIndexed = new HashMap<>();
 
   /**
@@ -72,7 +74,7 @@ public class InMemoryIndexer implements Indexer {
       add(term, tp);
     }
 
-    timeIndexed.put(url, System.currentTimeMillis());
+    timeIndexed.put(UrlUtil.getUrlKey(url), System.currentTimeMillis());
   }
 
   /** Prints the contents of the index. */
@@ -100,9 +102,9 @@ public class InMemoryIndexer implements Indexer {
   }
 
   public boolean shouldIndex(String url) {
-    url = UrlUtil.getUrlString(url);
-    if (url == null) return false;
-    Long lastIndexedTime = timeIndexed.get(url);
+    String key = UrlUtil.getUrlKey(url);
+    if (key == null) return false;
+    Long lastIndexedTime = timeIndexed.get(key);
 
     if (lastIndexedTime == null) {
       return true;
