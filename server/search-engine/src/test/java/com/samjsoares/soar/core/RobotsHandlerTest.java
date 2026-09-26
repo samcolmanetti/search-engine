@@ -1,7 +1,7 @@
 package com.samjsoares.soar.core;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.panforge.robotstxt.RobotsTxt;
 import com.samjsoares.soar.Fixtures;
@@ -9,7 +9,7 @@ import com.samjsoares.soar.util.UrlUtil;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RobotsHandlerTest {
 

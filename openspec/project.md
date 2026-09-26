@@ -20,8 +20,8 @@ run in both Maven projects, the code is reformatted, and the README is rewritten
 
 | Path | What | Notes |
 | --- | --- | --- |
-| `server/search-engine` | Crawler + indexer | Spring Boot 1.5.8, jsoup, OpenNLP, galimatias, panforge robots |
-| `server/searcher/seacher` | Search REST API (`GET /api/search?query=`) | Spring Boot 1.5.8, Gson. The folder is misspelled. |
+| `server/search-engine` | Crawler + indexer | Spring Boot 4.1, jsoup, OpenNLP, galimatias, panforge robots |
+| `server/searcher/seacher` | Search REST API (`GET /api/search?query=`) | Spring Boot 4.1, Gson. The folder is misspelled. |
 | `website` | PHP front end | Out of scope for Java style |
 
 Both projects are standalone Maven builds with no shared parent. Base package: `com.samjsoares.soar`.
@@ -29,12 +29,11 @@ Both depend on PostgreSQL, configured through git-ignored `application.propertie
 
 ## Tooling
 
-- JDK 21, Maven 3.9. Compilation still targets Java 8 (`source/target 1.8`).
+- JDK 21 for the build, Maven 3.9. Code targets Java 17 (`java.version` in each pom).
 - `mvn spotless:apply` formats. `mvn verify` runs tests, the Spotless check, and Checkstyle
   (warnings only).
-- Test libraries come from `spring-boot-starter-test` 1.5.8: JUnit 4.12, AssertJ 2.6.0, and
-  Mockito 1.10.19. On JDK 21, anything that uses cglib (Spring `@Configuration` proxies, Mockito
-  1.x) fails with `InaccessibleObjectException`. Prefer plain JUnit with hand-written fakes.
+- Test libraries come from `spring-boot-starter-test`: JUnit Jupiter, AssertJ, and Mockito.
+  The existing tests use hand-written fakes rather than Mockito; follow that style.
 
 ## Conventions (must follow)
 

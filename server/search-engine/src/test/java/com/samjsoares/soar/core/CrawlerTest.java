@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 public class CrawlerTest {
 
@@ -158,7 +159,8 @@ public class CrawlerTest {
     assertThat(indexer.indexed).containsExactly(HOME, PAGE_B);
   }
 
-  @Test(timeout = 5000)
+  @Test
+  @Timeout(value = 5, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
   public void testQueueOfDisallowedUrlsDrainsAndStops() {
     fetcher.serve(HOME, "links.html");
     robotsHandler.disallowedPaths.add("/a");

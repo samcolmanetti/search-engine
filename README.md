@@ -25,7 +25,7 @@ Both Java services store data in **PostgreSQL**. Database settings go in each se
 
 ## 🚀 Getting started
 
-**Requirements:** JDK 21, Maven 3.9+, and PostgreSQL
+**Requirements:** JDK 21 to build (the services run on Java 17+), Maven 3.9+, and PostgreSQL
 
 ```bash
 cd server/search-engine        # or server/searcher/seacher

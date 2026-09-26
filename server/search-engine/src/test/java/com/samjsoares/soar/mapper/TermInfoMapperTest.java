@@ -1,12 +1,12 @@
 package com.samjsoares.soar.mapper;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.samjsoares.soar.model.TermInfo;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TermInfoMapperTest {
 
