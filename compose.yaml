@@ -1,0 +1,59 @@
+# Runs Soar locally: PostgreSQL, the search API, and the website.
+#
+#   docker compose up --build            # db + searcher (:8080) + website (:8000)
+#   docker compose run --rm crawler      # crawl the seed URLs into the db (Ctrl+C to stop)
+#
+# The database schema and starter seeds load from db/ the first time the volume is created.
+# `docker compose down -v` deletes the data so they load again.
+
+x-datasource: &datasource
+  SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/soar
+  SPRING_DATASOURCE_USERNAME: soar
+  SPRING_DATASOURCE_PASSWORD: soar
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: soar
+      POSTGRES_USER: soar
+      POSTGRES_PASSWORD: soar
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U soar -d soar"]
+      interval: 2s
+      retries: 30
+
+  searcher:
+    build: server/searcher/seacher
+    environment: *datasource
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  website:
+    build: website
+    environment:
+      SOAR_API_URL: http://searcher:8080
+    ports:
+      - "8000:80"
+    depends_on:
+      - searcher
+
+  crawler:
+    build: server/search-engine
+    environment: *datasource
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ["crawl"]
+
+volumes:
+  pgdata:

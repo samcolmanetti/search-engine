@@ -12,7 +12,7 @@
 </div>
 
 <?php
-  $url = "localhost:8080/api/search?query=" . urlencode($query);
+  $url = SOAR_API_URL . "/api/search?query=" . urlencode($query);
 
   $results = json_decode(curl($url));
   if (!empty($results)) {
