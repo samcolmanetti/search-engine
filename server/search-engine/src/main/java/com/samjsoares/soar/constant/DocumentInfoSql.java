@@ -1,11 +1,15 @@
 package com.samjsoares.soar.constant;
 
-public class DocumentInfoSql {
+/** SQL statements for the {@code doc_info} table. */
+public final class DocumentInfoSql {
+
+  private DocumentInfoSql() {}
 
   public static final String UPSERT =
       "insert into doc_info (url, time_indexed, title, description) "
           + " values (?,?,?,?) on conflict (url) do update "
-          + " set time_indexed = excluded.time_indexed, title = excluded.title, description =  excluded.description";
+          + " set time_indexed = excluded.time_indexed, title = excluded.title,"
+          + " description =  excluded.description";
 
   public static final String SELECT_WITH_ID =
       "select id, url, time_indexed from doc_info where id = ? limit 1";

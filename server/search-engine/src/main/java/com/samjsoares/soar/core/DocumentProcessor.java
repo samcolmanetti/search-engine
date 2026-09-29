@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+/** Extracts the title, description and elements of a parsed page for indexing. */
 public class DocumentProcessor {
 
   /** Whitespace that follows the end of a sentence. */
@@ -14,22 +15,28 @@ public class DocumentProcessor {
 
   private static final int MAX_SENTENCES = 2;
   private static final int MAX_DESCRIPTION = 240;
-  private static final String ELLIPSIS = "\u2026";
+  private static final String ELLIPSIS = "…";
 
   private Document document;
   private long documentId;
   private String url;
 
+  /** Creates a processor for {@code document}, which was fetched from {@code url}. */
   public DocumentProcessor(String url, Document document) {
     this.document = document;
     this.url = url;
   }
 
+  /**
+   * Creates a processor for {@code document}, taking the URL from its location, or an empty string
+   * if {@code document} is null.
+   */
   public DocumentProcessor(Document document) {
     this.document = document;
     this.url = document != null ? document.location() : "";
   }
 
+  /** Creates a processor for {@code document} with the given database ID and no URL. */
   public DocumentProcessor(long documentId, Document document) {
     this.document = document;
     this.documentId = documentId;

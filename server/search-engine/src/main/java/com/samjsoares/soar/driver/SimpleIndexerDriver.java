@@ -6,11 +6,13 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/** Manual runner that fetches and indexes two fixed Wikipedia pages. */
 @Component
 public class SimpleIndexerDriver {
 
   @Autowired Indexer indexer;
 
+  /** Fetches and indexes the Wikipedia Education and Journalism pages. */
   public void run() {
     Fetcher wf = new Fetcher();
 

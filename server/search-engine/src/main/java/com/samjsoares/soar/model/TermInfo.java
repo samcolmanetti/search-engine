@@ -1,5 +1,6 @@
 package com.samjsoares.soar.model;
 
+/** A row of the {@code term_info} table: how many times a term appears in a document. */
 public class TermInfo {
 
   private long docId;
@@ -10,6 +11,7 @@ public class TermInfo {
 
   private String url;
 
+  /** Creates an empty instance to be filled in with setters. */
   public TermInfo() {}
 
   public long getDocId() {

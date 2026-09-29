@@ -19,19 +19,19 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+/** {@link DocumentInfoDao} backed by the {@code doc_info} table through a {@link JdbcTemplate}. */
 @Component
 public class DocumentInfoDaoImpl implements DocumentInfoDao {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
+  /** Creates a DAO that runs its queries against the given data source. */
   @Autowired
-  public void setDataSource(DataSource dataSource) {
+  public DocumentInfoDaoImpl(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
-
-  public DocumentInfoDaoImpl() {}
 
   @Override
   public long upsert(
@@ -57,7 +57,7 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
 
     long id = JdbcUtil.getInsertedId(holder, "id");
     if (id <= 0) {
-      logger.error("Failed to insert Document Info for url: %s", url);
+      logger.error("Failed to insert Document Info for url: {}", url);
     }
 
     return id;

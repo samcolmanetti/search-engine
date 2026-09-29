@@ -41,7 +41,13 @@ Java code follows the [Google Java Style Guide](https://google.github.io/stylegu
 | --- | --- |
 | `mvn spotless:apply` | ✍️ Formats code with google-java-format |
 | `mvn checkstyle:check` | 🔍 Lints with Google's Checkstyle rules |
-| `mvn verify` | ✅ Builds, tests, and fails on unformatted code |
+| `mvn verify` | ✅ Builds, tests, and fails on unformatted code or Checkstyle warnings |
+
+Run these in `server/search-engine` or `server/searcher/seacher`. Run `mvn verify` in `server/`
+to build and check both at once. CI runs that same command on every push and pull request.
+
+The PHP website isn't auto-formatted. If a formatter is added, use PSR-12 with php-cs-fixer, and
+leave the bundled Bootstrap and jQuery files alone.
 
 To hide formatting-only commits from `git blame`:
 

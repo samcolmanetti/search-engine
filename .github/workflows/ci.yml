@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # Compiles and tests both services, and fails on unformatted code or Checkstyle warnings.
+      - name: Build and test
+        working-directory: server
+        run: mvn -B verify
+
+      - name: Check PHP syntax
+        run: find website -name '*.php' -print0 | xargs -0 -n1 php -l

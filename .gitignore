@@ -6,6 +6,6 @@ server/search-engine/target/*
 *.DS_Store
 *.idea/*
 *.idea*
-*.imi
+*.iml
 *.properties
 

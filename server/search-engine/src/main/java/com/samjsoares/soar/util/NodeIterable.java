@@ -1,18 +1,19 @@
 package com.samjsoares.soar.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 import org.jsoup.nodes.Node;
 
 /** Performs a depth-first traversal of a jsoup Node. */
 public class NodeIterable implements Iterable<Node> {
 
-  private Node root;
+  private final Node root;
 
-  /**
-   * Creates an iterable starting with the given Node.
-   *
-   * @param root
-   */
+  /** Creates an iterable that traverses {@code root} and its descendants. */
   public NodeIterable(Node root) {
     this.root = root;
   }
@@ -32,14 +33,10 @@ public class NodeIterable implements Iterable<Node> {
     // this stack keeps track of the Nodes waiting to be visited
     Stack<Node> stack;
 
-    /**
-     * Initializes the Iterator with the root Node on the stack.
-     *
-     * @param node
-     */
+    /** Initializes the Iterator with the root Node on the stack. */
     public NodeIterator(Node node) {
       stack = new Stack<>();
-      stack.push(root);
+      stack.push(node);
     }
 
     @Override
@@ -56,7 +53,6 @@ public class NodeIterable implements Iterable<Node> {
 
       // otherwise pop the next Node off the stack
       Node node = stack.pop();
-      // System.out.println(node);
 
       // push the children onto the stack in reverse order
       List<Node> nodes = new ArrayList<Node>(node.childNodes());

@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
-public class UrlUtil {
+/** Static helpers for parsing, normalizing, and checking URLs. */
+public final class UrlUtil {
+
+  private UrlUtil() {}
+
   private static final String VALID_CONTENT_TYPES_PATTERN =
       "(text/.*)|(application\\/xml)|(application\\/xhtml\\+xml)";
   // A Pattern is thread-safe; a Matcher is not, so each call makes its own.
@@ -29,6 +33,10 @@ public class UrlUtil {
     return url != null ? url.getHost() + url.getPath() : null;
   }
 
+  /**
+   * Returns the cleaned form of the URL as a string (see {@link #getCleanUrl(String)}), or null for
+   * an invalid URL.
+   */
   public static String getUrlString(String url) {
     URI uri = getUri(url);
 
@@ -64,11 +72,16 @@ public class UrlUtil {
         return javaUrl.toURI();
       }
     } catch (Exception e) {
+      // Not a valid URI; callers treat null as an invalid URL.
     }
 
     return null;
   }
 
+  /**
+   * Parses the URL after replacing whitespace with {@code %20}, adding {@code https://} when it has
+   * no scheme, and dropping the query and fragment. Returns null for an invalid URL.
+   */
   public static java.net.URL getCleanUrl(String urlString) {
     try {
       io.mola.galimatias.URL url = io.mola.galimatias.URL.parse(cleanUpUrl(urlString));
@@ -92,25 +105,25 @@ public class UrlUtil {
     return url;
   }
 
-  private static boolean shouldContainHttp(String url) {
-    if (StringUtils.isBlank(url)) {
-      return false;
-    }
-
-    return !StringUtils.startsWith(url, "http") && !StringUtils.contains(url, "://");
-  }
-
-  public static java.net.URL getRobotsTxtURL(java.net.URL url) {
+  /**
+   * Returns the {@code /robots.txt} URL on the same scheme, host, and port as the given URL, or
+   * null if one can't be built (for example, when the URL is null).
+   */
+  public static java.net.URL getRobotsTxtUrl(java.net.URL url) {
     try {
       // getHost, not getAuthority: the authority includes the port, which is passed separately.
       return new java.net.URL(url.getProtocol(), url.getHost(), url.getPort(), ROBOTS_TXT_PATH);
     } catch (Exception e) {
-      // System.out.println("Failed to get robots.txt URL: " + e.toString());
+      // An unusable URL has no robots.txt; callers treat null as "none".
     }
 
     return null;
   }
 
+  /**
+   * Returns true if the content type is one the crawler can index: {@code text/*}, {@code
+   * application/xml}, or {@code application/xhtml+xml}. Parameters after a {@code ;} are ignored.
+   */
   public static boolean isValidContentType(String contentType) {
     contentType = StringUtils.substringBefore(contentType, ";");
     return CONTENT_TYPE_PATTERN.matcher(contentType).matches();

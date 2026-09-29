@@ -66,16 +66,12 @@ public class UrlUtilTest {
   }
 
   @Test
-  public void testGetGoogleRobotsTxt() {
+  public void testGetGoogleRobotsTxt() throws MalformedURLException {
     String urlStr = "https://www.google.com/search?q=josh+david";
     String expected = "https://www.google.com/robots.txt";
-    URL url = null;
-    try {
-      url = new URL(urlStr);
-    } catch (MalformedURLException e) {
-    }
+    URL url = new URL(urlStr);
 
-    assertEquals(expected, UrlUtil.getRobotsTxtURL(url).toString());
+    assertEquals(expected, UrlUtil.getRobotsTxtUrl(url).toString());
   }
 
   @Test
@@ -233,12 +229,12 @@ public class UrlUtilTest {
   @Test
   public void testRobotsTxtUrl_dropsPathAndQuery() throws MalformedURLException {
     URL url = new URL("http://example.com/deep/path/page.html?x=1#y");
-    assertEquals("http://example.com/robots.txt", UrlUtil.getRobotsTxtURL(url).toString());
+    assertEquals("http://example.com/robots.txt", UrlUtil.getRobotsTxtUrl(url).toString());
   }
 
   @Test
   public void testRobotsTxtUrl_null() {
-    assertNull(UrlUtil.getRobotsTxtURL(null));
+    assertNull(UrlUtil.getRobotsTxtUrl(null));
   }
 
   @Test
@@ -275,6 +271,6 @@ public class UrlUtilTest {
   @Test
   public void testRobotsTxtUrl_keepsExplicitPort() throws Exception {
     URL url = new URL("http://localhost:8080/deep/path/page.html?x=1#y");
-    assertEquals("http://localhost:8080/robots.txt", UrlUtil.getRobotsTxtURL(url).toString());
+    assertEquals("http://localhost:8080/robots.txt", UrlUtil.getRobotsTxtUrl(url).toString());
   }
 }

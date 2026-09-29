@@ -16,17 +16,12 @@ import org.jsoup.nodes.Document;
  */
 public class InMemoryIndexer implements Indexer {
 
-  private Map<String, Set<TermProcessor>> index = new HashMap<>();
+  private final Map<String, Set<TermProcessor>> index = new HashMap<>();
 
   /** Last indexed time by {@link UrlUtil#getUrlKey(String)}, so http and https share an entry. */
-  private Map<String, Long> timeIndexed = new HashMap<>();
+  private final Map<String, Long> timeIndexed = new HashMap<>();
 
-  /**
-   * Adds a TermProcessor to the set associated with `term`.
-   *
-   * @param term
-   * @param termProcessor
-   */
+  /** Adds a TermProcessor to the set associated with {@code term}. */
   public void add(String term, TermProcessor termProcessor) {
     Set<TermProcessor> set = get(term);
 
@@ -39,12 +34,7 @@ public class InMemoryIndexer implements Indexer {
     set.add(termProcessor);
   }
 
-  /**
-   * Looks up a search term and returns a set of TermProcessors.
-   *
-   * @param term
-   * @return
-   */
+  /** Returns the TermProcessors of the pages that contain {@code term}, or null if none do. */
   public Set<TermProcessor> get(String term) {
     return index.get(term);
   }
@@ -92,18 +82,20 @@ public class InMemoryIndexer implements Indexer {
     }
   }
 
-  /**
-   * Returns the set of terms that have been indexed.
-   *
-   * @return
-   */
+  /** Returns the set of terms that have been indexed. */
   private Set<String> keySet() {
     return index.keySet();
   }
 
+  /**
+   * Returns whether the page has not been indexed, over http or https, in the past week. Returns
+   * false for an invalid URL.
+   */
   public boolean shouldIndex(String url) {
     String key = UrlUtil.getUrlKey(url);
-    if (key == null) return false;
+    if (key == null) {
+      return false;
+    }
     Long lastIndexedTime = timeIndexed.get(key);
 
     if (lastIndexedTime == null) {
@@ -114,6 +106,10 @@ public class InMemoryIndexer implements Indexer {
     return System.currentTimeMillis() > nextIndexTime;
   }
 
+  /**
+   * Returns the count of {@code term} in each indexed page that contains it, keyed by URL. The map
+   * is empty if no page contains the term.
+   */
   public Map<String, Integer> getCounts(String term) {
     Set<TermProcessor> termProcessors = get(term);
     Map<String, Integer> counts = new HashMap<>();

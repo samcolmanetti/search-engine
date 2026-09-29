@@ -2,7 +2,13 @@ package com.samjsoares.soar.searcher.core;
 
 import com.samjsoares.soar.searcher.model.SearchInfo;
 import com.samjsoares.soar.searcher.model.SearchResult;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +17,7 @@ public class TermFrequencyRanker implements Ranker {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private Map<Long, List<SearchInfo>> map = new HashMap<>();
+  private final Map<Long, List<SearchInfo>> map = new HashMap<>();
 
   @Override
   public void add(List<SearchInfo> searchInfoList) {
@@ -66,18 +72,17 @@ public class TermFrequencyRanker implements Ranker {
     double sum = 0;
 
     for (SearchInfo searchInfo : searchInfoList) {
-      double tfIdf = searchInfo.getTermFrequency() / (double) searchInfo.getDocumentTermFrequency();
-      sum = sum + tfIdf;
+      // The term's share of all its occurrences in the index that fall in this document.
+      double termScore =
+          searchInfo.getTermFrequency() / (double) searchInfo.getDocumentTermFrequency();
+      sum = sum + termScore;
 
       logger.info(
-          "term: "
-              + searchInfo.getTerm()
-              + " | tf: "
-              + searchInfo.getTermFrequency()
-              + " | idf: "
-              + searchInfo.getDocumentTermFrequency()
-              + " | tf-idf: "
-              + tfIdf);
+          "term: {} | tf: {} | total tf: {} | score: {}",
+          searchInfo.getTerm(),
+          searchInfo.getTermFrequency(),
+          searchInfo.getDocumentTermFrequency(),
+          termScore);
     }
 
     return sum * searchInfoList.size();

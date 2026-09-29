@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
+/** Maps a row of the term lookup query to a {@link SearchInfo}. */
 public class SearchInfoMapper implements RowMapper {
 
   @Override

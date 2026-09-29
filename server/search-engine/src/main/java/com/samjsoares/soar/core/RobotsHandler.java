@@ -1,22 +1,35 @@
 package com.samjsoares.soar.core;
 
 import com.panforge.robotstxt.RobotsTxt;
-import com.samjsoares.soar.core.datastructure.LRUCacheMap;
+import com.samjsoares.soar.core.datastructure.LruCacheMap;
 import com.samjsoares.soar.util.UrlUtil;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Decides whether URLs may be crawled, fetching each host's robots.txt once and caching it for up
+ * to 128 hosts.
+ */
 @Component
 public class RobotsHandler {
 
   private static final int CACHE_LIMIT = 128;
 
-  private Map<String, RobotsTxt> map = new LRUCacheMap<>(CACHE_LIMIT);
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  private final Map<String, RobotsTxt> map = new LruCacheMap<>(CACHE_LIMIT);
+
+  /** Creates a handler with an empty cache. */
   public RobotsHandler() {}
 
+  /**
+   * Returns the robots.txt for the host of {@code url}, fetching and caching it if it is not
+   * cached. Returns null if {@code url} is null or the host has no usable robots.txt.
+   */
   public RobotsTxt add(URL url) {
     if (url == null) {
       return null;
@@ -28,7 +41,7 @@ public class RobotsHandler {
       return get(key);
     }
 
-    URL robotsUrl = UrlUtil.getRobotsTxtURL(url);
+    URL robotsUrl = UrlUtil.getRobotsTxtUrl(url);
     if (robotsUrl == null) {
       return null;
     }
@@ -38,7 +51,7 @@ public class RobotsHandler {
       map.put(key, txt);
       return txt;
     } catch (Exception exception) {
-      System.out.printf("Failed to find or parse RobotsTxt: %s\n", exception.toString());
+      logger.info("No usable robots.txt at {}: {}", robotsUrl, exception.toString());
       map.put(key, null);
     }
 
@@ -65,6 +78,10 @@ public class RobotsHandler {
     return map.containsKey(key);
   }
 
+  /**
+   * Returns whether robots.txt allows crawling the path of {@code url}. URLs on hosts without a
+   * usable robots.txt are allowed; a null URL or a failed query is not.
+   */
   public boolean isAllowed(URL url) {
     if (url == null) {
       return false;
@@ -80,7 +97,7 @@ public class RobotsHandler {
     try {
       return robotsTxt.query(null, url.getPath());
     } catch (Exception e) {
-      System.out.println("RobotsTxt query failed: " + e.toString());
+      logger.warn("robots.txt query failed for {}: {}", url, e.toString());
       return false;
     }
   }

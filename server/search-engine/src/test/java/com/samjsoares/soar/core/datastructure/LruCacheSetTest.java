@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class LRUCacheSetTest {
+public class LruCacheSetTest {
 
   @Test
   public void testNewSetIsEmpty() {
-    LRUCacheSet<String> set = new LRUCacheSet<>();
+    LruCacheSet<String> set = new LruCacheSet<>();
     assertTrue(set.isEmpty());
     assertEquals(0, set.size());
     assertFalse(set.contains("a"));
@@ -18,7 +18,7 @@ public class LRUCacheSetTest {
 
   @Test
   public void testAddReturnsTrueForNewItem() {
-    LRUCacheSet<String> set = new LRUCacheSet<>();
+    LruCacheSet<String> set = new LruCacheSet<>();
     assertTrue(set.add("a"));
     assertTrue(set.contains("a"));
     assertFalse(set.isEmpty());
@@ -27,7 +27,7 @@ public class LRUCacheSetTest {
 
   @Test
   public void testAddReturnsFalseForDuplicate() {
-    LRUCacheSet<String> set = new LRUCacheSet<>();
+    LruCacheSet<String> set = new LruCacheSet<>();
     set.add("a");
     assertFalse(set.add("a"));
     assertEquals(1, set.size());
@@ -35,7 +35,7 @@ public class LRUCacheSetTest {
 
   @Test
   public void testEvictsLeastRecentlyUsed() {
-    LRUCacheSet<String> set = new LRUCacheSet<>(2);
+    LruCacheSet<String> set = new LruCacheSet<>(2);
     set.add("a");
     set.add("b");
     set.add("c");
@@ -49,7 +49,7 @@ public class LRUCacheSetTest {
   @Test
   public void testContainsDoesNotCountAsAccess() {
     // contains() uses containsKey(), which does not update a LinkedHashMap's access order.
-    LRUCacheSet<String> set = new LRUCacheSet<>(2);
+    LruCacheSet<String> set = new LruCacheSet<>(2);
     set.add("a");
     set.add("b");
     set.contains("a");
@@ -61,7 +61,7 @@ public class LRUCacheSetTest {
 
   @Test
   public void testReAddCountsAsAccess() {
-    LRUCacheSet<String> set = new LRUCacheSet<>(2);
+    LruCacheSet<String> set = new LruCacheSet<>(2);
     set.add("a");
     set.add("b");
     set.add("a");
@@ -73,7 +73,7 @@ public class LRUCacheSetTest {
 
   @Test
   public void testDefaultLimitIs128() {
-    LRUCacheSet<Integer> set = new LRUCacheSet<>();
+    LruCacheSet<Integer> set = new LruCacheSet<>();
     for (int i = 0; i <= 128; i++) {
       set.add(i);
     }

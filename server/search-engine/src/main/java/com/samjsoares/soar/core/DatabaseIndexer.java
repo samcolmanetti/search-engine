@@ -11,12 +11,17 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Indexer that stores pages and their term counts in the database. It keeps no in-memory index, so
+ * {@link #get}, {@link #getCounts} and {@link #printIndex} are not supported.
+ */
 @Component
 public class DatabaseIndexer implements Indexer {
 
-  private DocumentInfoDao documentInfoDao;
-  private TermInfoDao termInfoDao;
+  private final DocumentInfoDao documentInfoDao;
+  private final TermInfoDao termInfoDao;
 
+  /** Creates an indexer that writes through the given DAOs. */
   @Autowired
   public DatabaseIndexer(DocumentInfoDao documentInfoDao, TermInfoDao termInfoDao) {
     this.documentInfoDao = documentInfoDao;
@@ -53,12 +58,14 @@ public class DatabaseIndexer implements Indexer {
 
   @Override
   public Set<TermProcessor> get(String term) {
-
+    // Not supported: the database indexer doesn't keep an in-memory index.
     return null;
   }
 
   @Override
-  public void printIndex() {}
+  public void printIndex() {
+    // Not supported: the database indexer doesn't keep an in-memory index.
+  }
 
   @Override
   public boolean shouldIndex(String url) {
@@ -79,6 +86,7 @@ public class DatabaseIndexer implements Indexer {
 
   @Override
   public Map<String, Integer> getCounts(String term) {
+    // Not supported: the database indexer doesn't keep an in-memory index.
     return null;
   }
 }

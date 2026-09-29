@@ -4,7 +4,8 @@ import com.samjsoares.soar.searcher.constant.Regex;
 import com.samjsoares.soar.searcher.dao.SearchInfoDao;
 import com.samjsoares.soar.searcher.model.SearchInfo;
 import com.samjsoares.soar.searcher.model.SearchResult;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import opennlp.tools.stemmer.PorterStemmer;
 import opennlp.tools.stemmer.Stemmer;
 import org.slf4j.Logger;
@@ -12,16 +13,36 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * {@link Searcher} that lowercases the query, splits it on spaces or {@code +}, looks up each
+ * term's stemmed form (falling back to the raw term), and ranks the hits with a {@link
+ * TermFrequencyRanker}.
+ */
 @Component
 public class SearcherImpl implements Searcher {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private SearchInfoDao searchInfoDao;
-  private Stemmer stemmer = new PorterStemmer();
+  private final SearchInfoDao searchInfoDao;
+  private final Stemmer stemmer = new PorterStemmer();
 
+  /**
+   * Creates a searcher that reads term data from the given DAO.
+   *
+   * @param searchInfoDao the source of indexed term data
+   */
   @Autowired
   public SearcherImpl(SearchInfoDao searchInfoDao) {
     this.searchInfoDao = searchInfoDao;
+  }
+
+  @Override
+  public List<SearchResult> search(String query) {
+    if (query == null) {
+      return Collections.emptyList();
+    }
+
+    logger.info("Query: {}", query);
+    return search(query.toLowerCase().split(Regex.SPACE_OR_PLUS));
   }
 
   @Override
@@ -47,15 +68,5 @@ public class SearcherImpl implements Searcher {
     }
 
     return searchInfoList;
-  }
-
-  @Override
-  public List<SearchResult> search(String query) {
-    if (query == null) {
-      return Collections.emptyList();
-    }
-
-    logger.info("Query: " + query);
-    return search(query.toLowerCase().split(Regex.SPACE_OR_PLUS));
   }
 }

@@ -12,14 +12,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/** {@link TermInfoDao} backed by the {@code term_info} table through a {@link JdbcTemplate}. */
 @Component
 public class TermInfoDaoImpl implements TermInfoDao {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
+  /** Creates a DAO that runs its queries against the given data source. */
   @Autowired
-  public void setDataSource(DataSource dataSource) {
+  public TermInfoDaoImpl(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
@@ -29,8 +31,7 @@ public class TermInfoDaoImpl implements TermInfoDao {
       Object[] params = new Object[] {termInfo.getDocId(), termInfo.getTerm(), termInfo.getCount()};
       return jdbcTemplate.update(TermInfoSql.UPSERT, params);
     } catch (Exception e) {
-      logger.error(
-          "Failed to insert terminfo: %s \n Exception: %s", termInfo.toString(), e.getMessage());
+      logger.error("Failed to insert terminfo: {}", termInfo, e);
     }
 
     return 0;

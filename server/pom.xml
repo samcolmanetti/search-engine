@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Builds both Soar services with one command: run `mvn verify` from this folder.
+
+  This is only an aggregator, not a parent. Each module keeps spring-boot-starter-parent
+  and still builds on its own (the Docker builds rely on that).
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.samjsoares.soar</groupId>
+    <artifactId>soar-server</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <name>soar-server</name>
+    <description>Builds the Soar crawler/indexer and search API together</description>
+
+    <modules>
+        <module>search-engine</module>
+        <module>searcher/seacher</module>
+    </modules>
+</project>

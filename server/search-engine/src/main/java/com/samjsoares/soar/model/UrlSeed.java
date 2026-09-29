@@ -1,11 +1,13 @@
 package com.samjsoares.soar.model;
 
+/** A seed URL that crawling starts from, with its id. */
 public class UrlSeed {
 
   private long id;
 
   private String url;
 
+  /** Creates an empty instance to be filled in with setters. */
   public UrlSeed() {}
 
   public long getId() {

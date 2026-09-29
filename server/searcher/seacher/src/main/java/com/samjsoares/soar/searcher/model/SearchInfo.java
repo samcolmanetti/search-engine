@@ -1,5 +1,9 @@
 package com.samjsoares.soar.searcher.model;
 
+/**
+ * One indexed term's occurrence in a document: the document's ID, URL, title, description and page
+ * rank, the term, its frequency in the document, and its total frequency across all documents.
+ */
 public class SearchInfo {
 
   private long docId;
@@ -11,6 +15,7 @@ public class SearchInfo {
   private String description;
   private long documentTermFrequency;
 
+  /** Creates an empty record whose fields are set through the setters. */
   public SearchInfo() {}
 
   public String getTitle() {

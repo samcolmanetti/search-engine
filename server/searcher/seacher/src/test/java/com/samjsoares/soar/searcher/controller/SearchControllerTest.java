@@ -8,9 +8,7 @@ import com.samjsoares.soar.searcher.model.SearchResult;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 public class SearchControllerTest {
 
@@ -34,12 +32,7 @@ public class SearchControllerTest {
   }
 
   private final FakeSearcher searcher = new FakeSearcher();
-  private final SearchController controller = new SearchController();
-
-  @BeforeEach
-  public void setUp() {
-    ReflectionTestUtils.setField(controller, "searcher", searcher);
-  }
+  private final SearchController controller = new SearchController(searcher);
 
   @Test
   public void testEmptyQueryReturnsEmptyObject() {

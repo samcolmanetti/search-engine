@@ -5,7 +5,13 @@ import com.samjsoares.soar.util.CollectionsUtil;
 import com.samjsoares.soar.util.NodeIterable;
 import com.samjsoares.soar.util.StopWordsUtil;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Node;
@@ -19,31 +25,27 @@ import org.jsoup.select.Elements;
  */
 public class TermProcessor {
 
-  private Map<String, TermInfo> map = new HashMap<>();
+  private final Map<String, TermInfo> map = new HashMap<>();
   private String url;
   private long documentId;
 
-  private ScaledStemmer scaledStemmer = new ScaledStemmer();
+  private final ScaledStemmer scaledStemmer = new ScaledStemmer();
 
+  /** Creates a processor for the page at {@code url}, as used by the in-memory index. */
   public TermProcessor(String url) {
     this.url = url;
-    this.map = new HashMap<>();
   }
 
+  /** Creates a processor whose term infos are tagged with the given database document ID. */
   public TermProcessor(long documentId) {
     this.documentId = documentId;
-    this.map = new HashMap<>();
   }
 
   public String getUrl() {
     return url;
   }
 
-  /**
-   * Returns the total of all counts.
-   *
-   * @return
-   */
+  /** Returns the total of all counts. */
   private int size() {
     int total = 0;
 
@@ -55,9 +57,8 @@ public class TermProcessor {
   }
 
   /**
-   * Takes a collection of Elements and counts their words.
-   *
-   * @param paragraphs
+   * Counts the words in every text node under the given elements; null counts nothing. Words are
+   * lowercased and stemmed, and stop words and single characters are skipped.
    */
   public void processElements(Elements paragraphs) {
     for (Node node : CollectionsUtil.emptyIfNull(paragraphs)) {
@@ -65,11 +66,7 @@ public class TermProcessor {
     }
   }
 
-  /**
-   * Finds TextNodes in a DOM tree and counts their words.
-   *
-   * @param root
-   */
+  /** Finds TextNodes in a DOM tree and counts their words. */
   private void processTree(Node root) {
     // NOTE: we could use select to find the TextNodes, but since
     // we already have a tree iterator, let's use it.
@@ -113,11 +110,7 @@ public class TermProcessor {
     return true;
   }
 
-  /**
-   * Increments the counter associated with `url`.
-   *
-   * @param term
-   */
+  /** Increments the count of {@code term}. */
   private void incrementTermCount(String term) {
     putTermCount(term, getTermCount(term) + 1);
   }
@@ -126,12 +119,7 @@ public class TermProcessor {
     map.put(scaledStemmer.stem(term), termInfo);
   }
 
-  /**
-   * Adds a url to the map with a given count.
-   *
-   * @param term
-   * @param count
-   */
+  /** Sets the count of {@code term}, creating its {@link TermInfo} if it is not yet in the map. */
   private void putTermCount(String term, int count) {
     TermInfo termInfo = get(term);
 
@@ -145,31 +133,23 @@ public class TermProcessor {
     put(term, termInfo);
   }
 
-  /**
-   * Returns the count associated with this url, or 0 if it is unseen.
-   *
-   * @param term
-   * @return
-   */
+  /** Returns the {@link TermInfo} for the stem of {@code term}, or null if it has not been seen. */
   public TermInfo get(String term) {
     return map.get(scaledStemmer.stem(term));
   }
 
+  /** Returns the count of the stem of {@code term}, or 0 if it has not been seen. */
   protected Integer getTermCount(String term) {
-    TermInfo termInfoInfo = get(term);
+    TermInfo termInfo = get(term);
 
-    if (termInfoInfo != null) {
-      return termInfoInfo.getCount();
+    if (termInfo != null) {
+      return termInfo.getCount();
     }
 
     return 0;
   }
 
-  /**
-   * Returns the set of terms that have been counted.
-   *
-   * @return
-   */
+  /** Returns the set of stemmed terms that have been counted. */
   protected Set<String> keySet() {
     return map.keySet();
   }
@@ -202,13 +182,9 @@ public class TermProcessor {
     }
   }
 
-  /**
-   * @param args
-   * @throws IOException
-   */
+  /** Fetches a sample Wikipedia page and prints its term counts. */
   public static void main(String[] args) throws IOException {
     String url = "https://en.wikipedia.org/wiki/University_of_Scranton";
-    // String url = "https://www.scranton.edu";
 
     Fetcher wf = new Fetcher();
     Elements paragraphs = wf.fetch(url);

@@ -1,6 +1,6 @@
 package com.samjsoares.soar.core;
 
-import com.samjsoares.soar.core.datastructure.LRUCacheMap;
+import com.samjsoares.soar.core.datastructure.LruCacheMap;
 import com.samjsoares.soar.util.UrlUtil;
 import java.io.File;
 import java.io.IOException;
@@ -12,23 +12,31 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Downloads and parses web pages, waiting at least one second between requests to the same host.
+ * Can also read saved copies of pages from local resources.
+ */
 @Component
 public class Fetcher {
   private static final long MIN_INTERVAL = 1000;
   private static final String SLASH = File.separator;
   private static final String CHAR_SET = "UTF-16";
 
-  private Map<String, Long> lastRequestTimeMap = new LRUCacheMap<>(128);
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  private final Map<String, Long> lastRequestTimeMap = new LruCacheMap<>(128);
+
+  /** Creates a fetcher with no request history. */
   public Fetcher() {}
 
   /**
-   * Fetches and parses a URL string, returning a list of paragraph elements.
+   * Fetches and parses a URL string, returning the children of the document.
    *
-   * @param url
-   * @return Elements document elements
+   * @return the document's children, or null if the page could not be fetched or parsed
    */
   public Elements fetch(String url) {
     Document doc = fetchDocument(url);
@@ -41,17 +49,18 @@ public class Fetcher {
   }
 
   /**
-   * Fetches and parses a URL string, returning a list of paragraph elements.
+   * Fetches and parses a URL string, first waiting if the host was requested less than a second
+   * ago.
    *
-   * @param url
-   * @return Elements document elements
+   * @return the parsed document, or null if the URL is malformed, the download fails, the content
+   *     type is not supported, or the page cannot be parsed
    */
   public Document fetchDocument(String url) {
     URL realUrl;
     try {
       realUrl = new URL(url);
     } catch (Exception e) {
-      System.out.println("Attempting to fetch malformed URL: " + url);
+      logger.warn("Attempting to fetch malformed URL: {}", url);
       return null;
     }
 
@@ -64,7 +73,6 @@ public class Fetcher {
       return null;
     }
 
-    // saveToFile(doc, realUrl);
     return doc;
   }
 
@@ -75,7 +83,7 @@ public class Fetcher {
     try {
       response = conn.execute();
     } catch (IOException e) {
-      System.out.println("IO Exception: " + e.toString());
+      logger.warn("Failed to download {}: {}", url, e.toString());
       return null;
     }
 
@@ -87,28 +95,15 @@ public class Fetcher {
     try {
       doc = response.parse();
     } catch (IOException e) {
-      System.out.println("IO Exception: " + e.toString());
+      logger.warn("Failed to parse {}: {}", url, e.toString());
     }
 
     return doc;
   }
 
-  private void saveToFile(Document doc, URL url) {
-    final File file;
-    try {
-      file = new File(getFileName(url));
-      FileUtils.writeStringToFile(file, doc.outerHtml(), CHAR_SET);
-    } catch (IOException e) {
-      System.out.println("Error saving to file " + e.getMessage());
-    }
-  }
-
   /**
-   * Reads the contents of a page from src/resources.
-   *
-   * @param url
-   * @return
-   * @throws IOException
+   * Reads a saved copy of a page from {@code src/main/resources/document_backup}, returning the
+   * children of the document, or null if the URL is malformed or the file cannot be read.
    */
   public Elements read(String url) {
     Document doc = readDocument(url);
@@ -121,18 +116,15 @@ public class Fetcher {
   }
 
   /**
-   * Reads the contents of a page from src/resources.
-   *
-   * @param url
-   * @return Document
-   * @throws IOException
+   * Reads and parses a saved copy of a page from {@code src/main/resources/document_backup}, found
+   * by the URL's host and path. Returns null if the URL is malformed or the file cannot be read.
    */
   public Document readDocument(String url) {
     URL realUrl;
     try {
       realUrl = new URL(url);
     } catch (MalformedURLException e) {
-      System.out.println("Malformed URL: " + url);
+      logger.warn("Malformed URL: {}", url);
       return null;
     }
 
@@ -142,7 +134,7 @@ public class Fetcher {
     try {
       file = FileUtils.readFileToString(new File(filename));
     } catch (IOException e) {
-      System.out.println("IO Exception reading file: " + e.toString());
+      logger.warn("Failed to read {}: {}", filename, e.toString());
       return null;
     }
 
@@ -179,10 +171,9 @@ public class Fetcher {
 
       if (currentTime < nextRequestTime) {
         try {
-          // System.out.println("Sleeping until " + nextRequestTime);
           Thread.sleep(nextRequestTime - currentTime);
         } catch (InterruptedException e) {
-          System.err.println("Warning: sleep interrupted in Fetcher.");
+          logger.warn("Sleep interrupted while rate limiting {}", url.getHost());
         }
       }
     }

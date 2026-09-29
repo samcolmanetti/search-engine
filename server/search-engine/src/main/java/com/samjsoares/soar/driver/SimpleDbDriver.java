@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/** Manual runner for trying out {@link DocumentInfoDao} reads and writes. */
 @Component
 public class SimpleDbDriver {
 
@@ -14,12 +15,14 @@ public class SimpleDbDriver {
 
   @Autowired private DocumentInfoDao documentInfoDao;
 
+  /** Looks up {@code youtube.com} and logs the result. */
   public void runSimpleRead() {
-    logger.info("runSimpleRead results: " + documentInfoDao.get("youtube.com"));
+    logger.info("runSimpleRead results: {}", documentInfoDao.get("youtube.com"));
   }
 
+  /** Upserts three sample pages and logs how long it took. */
   public void runSimpleInsert() {
-    long time1 = System.currentTimeMillis();
+    final long time1 = System.currentTimeMillis();
 
     documentInfoDao.upsert(
         "sam1.com", System.currentTimeMillis(), "sam1", "this is the description for sam1");
@@ -32,9 +35,10 @@ public class SimpleDbDriver {
 
     long time2 = System.currentTimeMillis();
 
-    logger.info("Time to insert: " + (time2 - time1));
+    logger.info("Time to insert: {}", time2 - time1);
   }
 
+  /** Logs every page returned by {@link DocumentInfoDao#getAll()}. */
   public void printDocuments() {
     logger.info("Printing all documents in Document_Info");
     for (DocumentInfo info : documentInfoDao.getAll()) {

@@ -1,12 +1,16 @@
 package com.samjsoares.soar.util;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StopWordsUtil {
+/** Holds a fixed list of English stop words that are left out of the index. */
+public final class StopWordsUtil {
 
-  private static String[] stopwords = {
+  private StopWordsUtil() {}
+
+  private static final String[] stopwords = {
     "a",
     "as",
     "able",
@@ -556,8 +560,10 @@ public class StopWordsUtil {
     "zero"
   };
 
-  private static Set<String> stopWordSet = new HashSet<>(Arrays.asList(stopwords));
+  private static final Set<String> stopWordSet =
+      Collections.unmodifiableSet(new HashSet<>(Arrays.asList(stopwords)));
 
+  /** Returns true if the word is in the stop word list. The match is exact and case-sensitive. */
   public static boolean isStopWord(String word) {
     return stopWordSet.contains(word);
   }
