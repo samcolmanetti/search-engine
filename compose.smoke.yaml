@@ -1,0 +1,6 @@
+# Used by scripts/smoke-test.sh on top of compose.yaml: adds a tiny static site for the crawler.
+services:
+  testsite:
+    image: nginx:alpine
+    volumes:
+      - ./scripts/smoke-site:/usr/share/nginx/html:ro
