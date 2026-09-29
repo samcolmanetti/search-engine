@@ -55,7 +55,7 @@ public class SearcherImpl implements Searcher {
       return Collections.emptyList();
     }
 
-    logger.info("Query: " + query);
+    logger.info("Query: {}", query);
     return search(query.toLowerCase().split(Regex.SPACE_OR_PLUS));
   }
 }

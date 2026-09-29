@@ -36,7 +36,7 @@ public class SimpleCrawlerDriver {
 
       crawlCount++;
 
-      logger.info("Crawled number: " + crawlCount);
+      logger.info("Crawled number: {}", crawlCount);
     } while (continueCrawling && crawlCount < maxCrawl);
 
     logger.info("Crawler is finished...");

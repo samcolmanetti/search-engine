@@ -71,7 +71,7 @@ public class Crawler {
     if (queue.isEmpty()) {
       logger.info("Queue is empty");
       if (enqueueUrl(urlServer.getNextUrl())) {
-        logger.info("Pulled new url from seed: " + queue.peek());
+        logger.info("Pulled new url from seed: {}", queue.peek());
       } else {
         return false;
       }
@@ -86,12 +86,12 @@ public class Crawler {
     }
 
     if (!indexer.shouldIndex(url.toString())) {
-      logger.debug("Already indexed " + url);
+      logger.debug("Already indexed {}", url);
       addInternalLinks(url);
       return true;
     }
 
-    logger.info("Crawling " + url);
+    logger.info("Crawling {}", url);
     Document document =
         !offline ? fetcher.fetchDocument(url.toString()) : fetcher.readDocument(url.toString());
 
@@ -142,7 +142,7 @@ public class Crawler {
     for (Element urlElement : urlElements) {
       String absUrl = urlElement.attr("abs:href");
       if (!enqueueUrl(absUrl)) {
-        logger.debug("Failed to enqueue: " + absUrl);
+        logger.debug("Failed to enqueue: {}", absUrl);
       }
     }
   }

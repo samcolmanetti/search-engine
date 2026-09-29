@@ -6,12 +6,16 @@ import com.samjsoares.soar.util.UrlUtil;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RobotsHandler {
 
   private static final int CACHE_LIMIT = 128;
+
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private Map<String, RobotsTxt> map = new LRUCacheMap<>(CACHE_LIMIT);
 
@@ -38,7 +42,7 @@ public class RobotsHandler {
       map.put(key, txt);
       return txt;
     } catch (Exception exception) {
-      System.out.printf("Failed to find or parse RobotsTxt: %s\n", exception.toString());
+      logger.info("No usable robots.txt at {}: {}", robotsUrl, exception.toString());
       map.put(key, null);
     }
 
@@ -80,7 +84,7 @@ public class RobotsHandler {
     try {
       return robotsTxt.query(null, url.getPath());
     } catch (Exception e) {
-      System.out.println("RobotsTxt query failed: " + e.toString());
+      logger.warn("robots.txt query failed for {}: {}", url, e.toString());
       return false;
     }
   }

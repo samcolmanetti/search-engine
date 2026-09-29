@@ -12,6 +12,8 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +21,8 @@ public class Fetcher {
   private static final long MIN_INTERVAL = 1000;
   private static final String SLASH = File.separator;
   private static final String CHAR_SET = "UTF-16";
+
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private Map<String, Long> lastRequestTimeMap = new LRUCacheMap<>(128);
 
@@ -51,7 +55,7 @@ public class Fetcher {
     try {
       realUrl = new URL(url);
     } catch (Exception e) {
-      System.out.println("Attempting to fetch malformed URL: " + url);
+      logger.warn("Attempting to fetch malformed URL: {}", url);
       return null;
     }
 
@@ -75,7 +79,7 @@ public class Fetcher {
     try {
       response = conn.execute();
     } catch (IOException e) {
-      System.out.println("IO Exception: " + e.toString());
+      logger.warn("Failed to download {}: {}", url, e.toString());
       return null;
     }
 
@@ -87,7 +91,7 @@ public class Fetcher {
     try {
       doc = response.parse();
     } catch (IOException e) {
-      System.out.println("IO Exception: " + e.toString());
+      logger.warn("Failed to parse {}: {}", url, e.toString());
     }
 
     return doc;
@@ -132,7 +136,7 @@ public class Fetcher {
     try {
       realUrl = new URL(url);
     } catch (MalformedURLException e) {
-      System.out.println("Malformed URL: " + url);
+      logger.warn("Malformed URL: {}", url);
       return null;
     }
 
@@ -142,7 +146,7 @@ public class Fetcher {
     try {
       file = FileUtils.readFileToString(new File(filename));
     } catch (IOException e) {
-      System.out.println("IO Exception reading file: " + e.toString());
+      logger.warn("Failed to read {}: {}", filename, e.toString());
       return null;
     }
 
@@ -182,7 +186,7 @@ public class Fetcher {
           // System.out.println("Sleeping until " + nextRequestTime);
           Thread.sleep(nextRequestTime - currentTime);
         } catch (InterruptedException e) {
-          System.err.println("Warning: sleep interrupted in Fetcher.");
+          logger.warn("Sleep interrupted while rate limiting {}", url.getHost());
         }
       }
     }

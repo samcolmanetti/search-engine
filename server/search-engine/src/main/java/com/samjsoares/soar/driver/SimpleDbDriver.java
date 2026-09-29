@@ -15,7 +15,7 @@ public class SimpleDbDriver {
   @Autowired private DocumentInfoDao documentInfoDao;
 
   public void runSimpleRead() {
-    logger.info("runSimpleRead results: " + documentInfoDao.get("youtube.com"));
+    logger.info("runSimpleRead results: {}", documentInfoDao.get("youtube.com"));
   }
 
   public void runSimpleInsert() {
@@ -32,7 +32,7 @@ public class SimpleDbDriver {
 
     long time2 = System.currentTimeMillis();
 
-    logger.info("Time to insert: " + (time2 - time1));
+    logger.info("Time to insert: {}", time2 - time1);
   }
 
   public void printDocuments() {

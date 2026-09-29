@@ -19,7 +19,7 @@ public class SearchController {
 
   @RequestMapping(value = "/api/search", method = RequestMethod.GET)
   public String search(@RequestParam String query) {
-    logger.info("Query (controller): " + query);
+    logger.info("Query (controller): {}", query);
 
     if (!StringUtils.hasLength(query)) {
       return gson.toJson(new Object());

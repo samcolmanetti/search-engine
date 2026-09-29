@@ -70,14 +70,11 @@ public class TermFrequencyRanker implements Ranker {
       sum = sum + tfIdf;
 
       logger.info(
-          "term: "
-              + searchInfo.getTerm()
-              + " | tf: "
-              + searchInfo.getTermFrequency()
-              + " | idf: "
-              + searchInfo.getDocumentTermFrequency()
-              + " | tf-idf: "
-              + tfIdf);
+          "term: {} | tf: {} | idf: {} | tf-idf: {}",
+          searchInfo.getTerm(),
+          searchInfo.getTermFrequency(),
+          searchInfo.getDocumentTermFrequency(),
+          tfIdf);
     }
 
     return sum * searchInfoList.size();
