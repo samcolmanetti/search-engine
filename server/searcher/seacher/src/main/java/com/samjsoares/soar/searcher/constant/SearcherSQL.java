@@ -1,6 +1,9 @@
 package com.samjsoares.soar.searcher.constant;
 
-public class SearcherSQL {
+public final class SearcherSQL {
+
+  private SearcherSQL() {}
+
   public static final String SELECT_BY_TERM =
       "select doc_id, url, page_rank, term, frequency, title, description, "
           + " (select sum(frequency) from term_info where term = ?) as doc_term_freq "

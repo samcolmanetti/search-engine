@@ -4,7 +4,7 @@ public class LRUCacheSet<T> {
 
   private static final Object PRESENT = new Object();
 
-  private LRUCacheMap<T, Object> lruCacheMap;
+  private final LRUCacheMap<T, Object> lruCacheMap;
 
   private static final int DEFAULT_LIMIT = 128;
   private final int limit;

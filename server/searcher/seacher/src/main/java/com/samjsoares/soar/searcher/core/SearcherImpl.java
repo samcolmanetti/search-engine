@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 public class SearcherImpl implements Searcher {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private SearchInfoDao searchInfoDao;
-  private Stemmer stemmer = new PorterStemmer();
+  private final SearchInfoDao searchInfoDao;
+  private final Stemmer stemmer = new PorterStemmer();
 
   @Autowired
   public SearcherImpl(SearchInfoDao searchInfoDao) {

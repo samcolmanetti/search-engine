@@ -6,7 +6,7 @@ import org.jsoup.nodes.Node;
 /** Performs a depth-first traversal of a jsoup Node. */
 public class NodeIterable implements Iterable<Node> {
 
-  private Node root;
+  private final Node root;
 
   /**
    * Creates an iterable starting with the given Node.

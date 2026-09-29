@@ -1,6 +1,8 @@
 package com.samjsoares.soar.constant;
 
-public class DocumentInfoSql {
+public final class DocumentInfoSql {
+
+  private DocumentInfoSql() {}
 
   public static final String UPSERT =
       "insert into doc_info (url, time_indexed, title, description) "

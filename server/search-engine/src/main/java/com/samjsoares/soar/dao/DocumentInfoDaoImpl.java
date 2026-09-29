@@ -24,14 +24,12 @@ public class DocumentInfoDaoImpl implements DocumentInfoDao {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
   @Autowired
-  public void setDataSource(DataSource dataSource) {
+  public DocumentInfoDaoImpl(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
-
-  public DocumentInfoDaoImpl() {}
 
   @Override
   public long upsert(

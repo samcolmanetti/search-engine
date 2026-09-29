@@ -2,7 +2,9 @@ package com.samjsoares.soar.util;
 
 import org.springframework.jdbc.support.KeyHolder;
 
-public class JdbcUtil {
+public final class JdbcUtil {
+
+  private JdbcUtil() {}
 
   public static long getInsertedId(KeyHolder holder, String idColumn) {
     if (holder.getKeys().size() > 1) {

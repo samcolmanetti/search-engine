@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabaseIndexer implements Indexer {
 
-  private DocumentInfoDao documentInfoDao;
-  private TermInfoDao termInfoDao;
+  private final DocumentInfoDao documentInfoDao;
+  private final TermInfoDao termInfoDao;
 
   @Autowired
   public DatabaseIndexer(DocumentInfoDao documentInfoDao, TermInfoDao termInfoDao) {

@@ -24,7 +24,7 @@ public class Fetcher {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private Map<String, Long> lastRequestTimeMap = new LRUCacheMap<>(128);
+  private final Map<String, Long> lastRequestTimeMap = new LRUCacheMap<>(128);
 
   public Fetcher() {}
 

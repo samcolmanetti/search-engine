@@ -7,8 +7,8 @@ import opennlp.tools.stemmer.Stemmer;
 
 public class ScaledStemmer {
 
-  private Stemmer stemmer = new PorterStemmer();
-  private Map<String, String> cache = new LRUCacheMap(256);
+  private final Stemmer stemmer = new PorterStemmer();
+  private final Map<String, String> cache = new LRUCacheMap<>(256);
 
   public ScaledStemmer() {}
 

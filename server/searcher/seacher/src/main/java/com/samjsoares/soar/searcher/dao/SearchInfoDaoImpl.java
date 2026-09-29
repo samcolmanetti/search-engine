@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SearchInfoDaoImpl implements SearchInfoDao {
 
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
   @Autowired
   public SearchInfoDaoImpl(DataSource dataSource) {

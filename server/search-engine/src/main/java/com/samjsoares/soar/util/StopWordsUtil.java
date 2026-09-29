@@ -1,12 +1,15 @@
 package com.samjsoares.soar.util;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StopWordsUtil {
+public final class StopWordsUtil {
 
-  private static String[] stopwords = {
+  private StopWordsUtil() {}
+
+  private static final String[] stopwords = {
     "a",
     "as",
     "able",
@@ -556,7 +559,8 @@ public class StopWordsUtil {
     "zero"
   };
 
-  private static Set<String> stopWordSet = new HashSet<>(Arrays.asList(stopwords));
+  private static final Set<String> stopWordSet =
+      Collections.unmodifiableSet(new HashSet<>(Arrays.asList(stopwords)));
 
   public static boolean isStopWord(String word) {
     return stopWordSet.contains(word);

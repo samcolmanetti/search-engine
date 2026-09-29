@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class TermInfoDaoImpl implements TermInfoDao {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
   @Autowired
-  public void setDataSource(DataSource dataSource) {
+  public TermInfoDaoImpl(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 

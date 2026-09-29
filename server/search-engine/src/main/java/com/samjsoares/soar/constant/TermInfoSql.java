@@ -1,6 +1,8 @@
 package com.samjsoares.soar.constant;
 
-public class TermInfoSql {
+public final class TermInfoSql {
+
+  private TermInfoSql() {}
 
   public static final String UPSERT =
       "insert into term_info (doc_id, term, frequency) values (?,?,?) "

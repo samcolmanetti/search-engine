@@ -16,10 +16,10 @@ import org.jsoup.nodes.Document;
  */
 public class InMemoryIndexer implements Indexer {
 
-  private Map<String, Set<TermProcessor>> index = new HashMap<>();
+  private final Map<String, Set<TermProcessor>> index = new HashMap<>();
 
   /** Last indexed time by {@link UrlUtil#getUrlKey(String)}, so http and https share an entry. */
-  private Map<String, Long> timeIndexed = new HashMap<>();
+  private final Map<String, Long> timeIndexed = new HashMap<>();
 
   /**
    * Adds a TermProcessor to the set associated with `term`.

@@ -17,7 +17,7 @@ public class RobotsHandler {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private Map<String, RobotsTxt> map = new LRUCacheMap<>(CACHE_LIMIT);
+  private final Map<String, RobotsTxt> map = new LRUCacheMap<>(CACHE_LIMIT);
 
   public RobotsHandler() {}
 

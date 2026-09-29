@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class SimpleCrawlerDriver {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private Crawler crawler;
+  private final Crawler crawler;
 
   @Autowired
   public SimpleCrawlerDriver(Crawler crawler) {

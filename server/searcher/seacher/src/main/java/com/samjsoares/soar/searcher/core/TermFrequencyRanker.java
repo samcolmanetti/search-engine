@@ -11,7 +11,7 @@ public class TermFrequencyRanker implements Ranker {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private Map<Long, List<SearchInfo>> map = new HashMap<>();
+  private final Map<Long, List<SearchInfo>> map = new HashMap<>();
 
   @Override
   public void add(List<SearchInfo> searchInfoList) {

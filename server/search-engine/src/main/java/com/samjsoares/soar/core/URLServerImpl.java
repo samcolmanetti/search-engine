@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class URLServerImpl implements URLServer {
 
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
   @Autowired
   public URLServerImpl(DataSource dataSource) {

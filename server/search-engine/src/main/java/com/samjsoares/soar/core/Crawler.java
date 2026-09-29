@@ -17,26 +17,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class Crawler {
   /** Where the results are stored */
-  private Indexer indexer;
+  private final Indexer indexer;
 
   /** Queue of URLs to may be indexed */
-  private Queue<URL> queue = new LinkedList<>();
+  private final Queue<URL> queue = new LinkedList<>();
 
   /** Fetcher used to get pages */
-  private Fetcher fetcher;
+  private final Fetcher fetcher;
 
   /** Handler class that determines whether we can crawl a certain directory */
-  private RobotsHandler robotsHandler;
+  private final RobotsHandler robotsHandler;
 
-  private URLServer urlServer;
+  private final URLServer urlServer;
 
   /**
    * Keys of recently queued URLs, from {@link UrlUtil#getUrlKey(URL)}, so the http and https
    * versions of a page are queued once.
    */
-  private LRUCacheSet<String> cache = new LRUCacheSet<>(512);
+  private final LRUCacheSet<String> cache = new LRUCacheSet<>(512);
 
-  private Random random = new Random();
+  private final Random random = new Random();
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
-public class UrlUtil {
+public final class UrlUtil {
+
+  private UrlUtil() {}
+
   private static final String VALID_CONTENT_TYPES_PATTERN =
       "(text/.*)|(application\\/xml)|(application\\/xhtml\\+xml)";
   // A Pattern is thread-safe; a Matcher is not, so each call makes its own.

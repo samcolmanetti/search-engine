@@ -19,20 +19,18 @@ import org.jsoup.select.Elements;
  */
 public class TermProcessor {
 
-  private Map<String, TermInfo> map = new HashMap<>();
+  private final Map<String, TermInfo> map = new HashMap<>();
   private String url;
   private long documentId;
 
-  private ScaledStemmer scaledStemmer = new ScaledStemmer();
+  private final ScaledStemmer scaledStemmer = new ScaledStemmer();
 
   public TermProcessor(String url) {
     this.url = url;
-    this.map = new HashMap<>();
   }
 
   public TermProcessor(long documentId) {
     this.documentId = documentId;
-    this.map = new HashMap<>();
   }
 
   public String getUrl() {
@@ -156,10 +154,10 @@ public class TermProcessor {
   }
 
   protected Integer getTermCount(String term) {
-    TermInfo termInfoInfo = get(term);
+    TermInfo termInfo = get(term);
 
-    if (termInfoInfo != null) {
-      return termInfoInfo.getCount();
+    if (termInfo != null) {
+      return termInfo.getCount();
     }
 
     return 0;

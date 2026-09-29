@@ -13,9 +13,14 @@ public class SearchController {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  @Autowired private Searcher searcher;
+  private static final Gson gson = new Gson();
 
-  private static Gson gson = new Gson();
+  private final Searcher searcher;
+
+  @Autowired
+  public SearchController(Searcher searcher) {
+    this.searcher = searcher;
+  }
 
   @RequestMapping(value = "/api/search", method = RequestMethod.GET)
   public String search(@RequestParam String query) {

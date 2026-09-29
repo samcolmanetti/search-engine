@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SearcherDriver {
 
-  private Searcher searcher;
+  private final Searcher searcher;
 
   @Autowired
   public SearcherDriver(Searcher searcher) {
