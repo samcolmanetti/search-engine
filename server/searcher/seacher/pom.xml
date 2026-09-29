@@ -95,7 +95,7 @@
 				</executions>
 			</plugin>
 			<!-- Linter: Checkstyle with Google's ruleset (google_checks.xml ships with Checkstyle).
-					`mvn checkstyle:check` prints violations. They are warnings for now, so they don't fail the build. -->
+					`mvn checkstyle:check` prints violations. Any finding fails the build. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -114,6 +114,8 @@
 				<suppressionsFileExpression>org.checkstyle.google.suppressionfilter.config</suppressionsFileExpression>
 					<consoleOutput>true</consoleOutput>
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+				<!-- Fail the build on any finding. google_checks.xml reports everything as a warning. -->
+				<violationSeverity>warning</violationSeverity>
 				</configuration>
 				<executions>
 					<execution>
