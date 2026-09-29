@@ -16,22 +16,23 @@ create table if not exists doc_info (
 create table if not exists term_info (
   doc_id    bigint not null references doc_info (id) on delete cascade,
   term      text   not null,
-  frequency integer not null,
+  frequency integer not null check (frequency > 0),
   primary key (doc_id, term)
 );
 
-create index if not exists term_info_term_idx on term_info (term);
+-- Serves the searcher's lookup: rows for one term, most frequent first.
+create index if not exists term_info_term_frequency_idx on term_info (term, frequency desc);
 
--- URLs the crawler starts from. The crawler reads them in id order.
+-- URLs the crawler starts from. The crawler reads them in id order; gaps in ids are fine.
 create table if not exists url_seed (
   id  bigserial primary key,
-  url text not null
+  url text not null unique
 );
 
--- A single row holding the id of the next seed to crawl.
+-- Exactly one row, holding the id to start from when the crawler next needs a seed.
 create table if not exists url_seed_index (
-  index bigint not null
+  one   boolean primary key default true check (one),  -- makes a second row impossible
+  index bigint  not null
 );
 
-insert into url_seed_index (index)
-select 1 where not exists (select 1 from url_seed_index);
+insert into url_seed_index (index) values (1) on conflict do nothing;
