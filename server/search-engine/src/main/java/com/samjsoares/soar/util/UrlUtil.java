@@ -92,20 +92,12 @@ public class UrlUtil {
     return url;
   }
 
-  private static boolean shouldContainHttp(String url) {
-    if (StringUtils.isBlank(url)) {
-      return false;
-    }
-
-    return !StringUtils.startsWith(url, "http") && !StringUtils.contains(url, "://");
-  }
-
   public static java.net.URL getRobotsTxtURL(java.net.URL url) {
     try {
       // getHost, not getAuthority: the authority includes the port, which is passed separately.
       return new java.net.URL(url.getProtocol(), url.getHost(), url.getPort(), ROBOTS_TXT_PATH);
     } catch (Exception e) {
-      // System.out.println("Failed to get robots.txt URL: " + e.toString());
+      // An unusable URL has no robots.txt; callers treat null as "none".
     }
 
     return null;

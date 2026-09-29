@@ -16,9 +16,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Crawler {
-  /** URL of where we started crawling */
-  // private final URL source;
-
   /** Where the results are stored */
   private Indexer indexer;
 

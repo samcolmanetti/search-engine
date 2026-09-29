@@ -208,7 +208,6 @@ public class TermProcessor {
    */
   public static void main(String[] args) throws IOException {
     String url = "https://en.wikipedia.org/wiki/University_of_Scranton";
-    // String url = "https://www.scranton.edu";
 
     Fetcher wf = new Fetcher();
     Elements paragraphs = wf.fetch(url);

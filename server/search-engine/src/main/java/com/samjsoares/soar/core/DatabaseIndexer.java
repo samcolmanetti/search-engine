@@ -53,12 +53,14 @@ public class DatabaseIndexer implements Indexer {
 
   @Override
   public Set<TermProcessor> get(String term) {
-
+    // Not supported: the database indexer doesn't keep an in-memory index.
     return null;
   }
 
   @Override
-  public void printIndex() {}
+  public void printIndex() {
+    // Not supported: the database indexer doesn't keep an in-memory index.
+  }
 
   @Override
   public boolean shouldIndex(String url) {
@@ -79,6 +81,7 @@ public class DatabaseIndexer implements Indexer {
 
   @Override
   public Map<String, Integer> getCounts(String term) {
+    // Not supported: the database indexer doesn't keep an in-memory index.
     return null;
   }
 }

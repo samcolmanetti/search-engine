@@ -68,7 +68,6 @@ public class Fetcher {
       return null;
     }
 
-    // saveToFile(doc, realUrl);
     return doc;
   }
 
@@ -95,16 +94,6 @@ public class Fetcher {
     }
 
     return doc;
-  }
-
-  private void saveToFile(Document doc, URL url) {
-    final File file;
-    try {
-      file = new File(getFileName(url));
-      FileUtils.writeStringToFile(file, doc.outerHtml(), CHAR_SET);
-    } catch (IOException e) {
-      System.out.println("Error saving to file " + e.getMessage());
-    }
   }
 
   /**
@@ -183,7 +172,6 @@ public class Fetcher {
 
       if (currentTime < nextRequestTime) {
         try {
-          // System.out.println("Sleeping until " + nextRequestTime);
           Thread.sleep(nextRequestTime - currentTime);
         } catch (InterruptedException e) {
           logger.warn("Sleep interrupted while rate limiting {}", url.getHost());
