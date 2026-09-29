@@ -50,6 +50,8 @@ Then open <http://localhost:8000> and search for something the crawler has index
   volume is created. To start over with an empty database, run `docker compose down -v`.
 - Follow logs with `docker compose logs -f searcher`.
 - Open a SQL shell with `docker compose exec db psql -U soar soar`.
+- Port already in use (for example, a local PostgreSQL on 5432)? Pick other host ports with
+  `SOAR_DB_PORT`, `SOAR_API_PORT`, or `SOAR_WEB_PORT`, e.g. `SOAR_DB_PORT=5433 docker compose up -d`.
 
 ### Option B: Run each piece yourself
 
@@ -96,10 +98,11 @@ with the `curl` extension (only needed for the website).
 
 ### Choosing what to crawl
 
-Add rows to `url_seed`. The crawler reads them in `id` order, and `url_seed_index` holds the next id to read:
+Add rows to `url_seed`. The crawler reads them in `id` order, starting from the id in
+`url_seed_index`. Seed URLs are unique, and `db/seed.sql` is safe to run again.
 
 ```sql
-insert into url_seed (url) values ('https://example.com/');
+insert into url_seed (url) values ('https://example.com/') on conflict (url) do nothing;
 update url_seed_index set index = (select min(id) from url_seed);   -- re-read seeds from the start
 ```
 
@@ -108,9 +111,16 @@ The crawler respects `robots.txt` and waits at least one second between requests
 ## 🧪 Testing and debugging
 
 ```bash
-cd server/search-engine && mvn test       # crawler + indexer unit tests (no database needed)
-cd server/searcher/seacher && mvn test    # searcher unit tests (no database needed)
+cd server && mvn verify       # unit tests + style checks for both services (no database needed)
+scripts/smoke-test.sh         # end to end in Docker: crawl a test site, then search it
 ```
+
+The smoke test builds the Docker images, crawls the small site in `scripts/smoke-site/`, and checks
+the search API and website. It uses its own ports and Compose project, so it won't disturb a stack
+you already have running. Set `KEEP=1` to leave its stack up afterwards. CI runs both commands on
+every pull request.
+
+To run one service's unit tests: `cd server/search-engine && mvn test` (or `server/searcher/seacher`).
 
 - **Debug in an IDE:** open either Maven project, set the three `SPRING_DATASOURCE_*` variables in the
   run configuration, and debug `SoarApplication` (crawler) or `SearcherApplication` (searcher).

@@ -24,3 +24,12 @@ jobs:
 
       - name: Check PHP syntax
         run: find website -name '*.php' -print0 | xargs -0 -n1 php -l
+
+  # Builds the Docker images, crawls a small test site, and checks the API and website end to end.
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Smoke test the Docker stack
+        run: scripts/smoke-test.sh

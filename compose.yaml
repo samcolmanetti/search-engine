@@ -5,6 +5,9 @@
 #
 # The database schema and starter seeds load from db/ the first time the volume is created.
 # `docker compose down -v` deletes the data so they load again.
+#
+# Host ports default to 5432, 8080, and 8000. If one is taken (say, by a local PostgreSQL), pick
+# another with SOAR_DB_PORT, SOAR_API_PORT, or SOAR_WEB_PORT, e.g. `SOAR_DB_PORT=5433 docker compose up`.
 
 x-datasource: &datasource
   SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/soar
@@ -19,7 +22,7 @@ services:
       POSTGRES_USER: soar
       POSTGRES_PASSWORD: soar
     ports:
-      - "5432:5432"
+      - "${SOAR_DB_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
@@ -33,7 +36,7 @@ services:
     build: server/searcher/seacher
     environment: *datasource
     ports:
-      - "8080:8080"
+      - "${SOAR_API_PORT:-8080}:8080"
     depends_on:
       db:
         condition: service_healthy
@@ -43,7 +46,7 @@ services:
     environment:
       SOAR_API_URL: http://searcher:8080
     ports:
-      - "8000:80"
+      - "${SOAR_WEB_PORT:-8000}:80"
     depends_on:
       - searcher
 
