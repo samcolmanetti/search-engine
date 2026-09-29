@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Decides whether URLs may be crawled, fetching each host's robots.txt once and caching it for up
+ * to 128 hosts.
+ */
 @Component
 public class RobotsHandler {
 
@@ -19,8 +23,13 @@ public class RobotsHandler {
 
   private final Map<String, RobotsTxt> map = new LruCacheMap<>(CACHE_LIMIT);
 
+  /** Creates a handler with an empty cache. */
   public RobotsHandler() {}
 
+  /**
+   * Returns the robots.txt for the host of {@code url}, fetching and caching it if it is not
+   * cached. Returns null if {@code url} is null or the host has no usable robots.txt.
+   */
   public RobotsTxt add(URL url) {
     if (url == null) {
       return null;
@@ -69,6 +78,10 @@ public class RobotsHandler {
     return map.containsKey(key);
   }
 
+  /**
+   * Returns whether robots.txt allows crawling the path of {@code url}. URLs on hosts without a
+   * usable robots.txt are allowed; a null URL or a failed query is not.
+   */
   public boolean isAllowed(URL url) {
     if (url == null) {
       return false;

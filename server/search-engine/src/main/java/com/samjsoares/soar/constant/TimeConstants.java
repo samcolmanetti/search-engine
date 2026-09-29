@@ -1,5 +1,6 @@
 package com.samjsoares.soar.constant;
 
+/** Durations in milliseconds. */
 public final class TimeConstants {
 
   private TimeConstants() {}

@@ -1,5 +1,6 @@
 package com.samjsoares.soar.searcher.constant;
 
+/** SQL statements used by the searcher. */
 public final class SearcherSql {
 
   private SearcherSql() {}

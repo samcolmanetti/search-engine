@@ -72,15 +72,17 @@ public class TermFrequencyRanker implements Ranker {
     double sum = 0;
 
     for (SearchInfo searchInfo : searchInfoList) {
-      double tfIdf = searchInfo.getTermFrequency() / (double) searchInfo.getDocumentTermFrequency();
-      sum = sum + tfIdf;
+      // The term's share of all its occurrences in the index that fall in this document.
+      double termScore =
+          searchInfo.getTermFrequency() / (double) searchInfo.getDocumentTermFrequency();
+      sum = sum + termScore;
 
       logger.info(
-          "term: {} | tf: {} | idf: {} | tf-idf: {}",
+          "term: {} | tf: {} | total tf: {} | score: {}",
           searchInfo.getTerm(),
           searchInfo.getTermFrequency(),
           searchInfo.getDocumentTermFrequency(),
-          tfIdf);
+          termScore);
     }
 
     return sum * searchInfoList.size();

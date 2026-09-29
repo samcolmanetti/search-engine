@@ -1,5 +1,6 @@
 package com.samjsoares.soar.constant;
 
+/** SQL statements for the {@code doc_info} table. */
 public final class DocumentInfoSql {
 
   private DocumentInfoSql() {}

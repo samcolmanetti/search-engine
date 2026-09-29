@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/** Spring Boot entry point for the search engine; on startup it runs the crawler driver. */
 @SpringBootApplication
 public class SoarApplication implements CommandLineRunner {
 
@@ -22,6 +23,7 @@ public class SoarApplication implements CommandLineRunner {
     simpleCrawlerDriver.run();
   }
 
+  /** Starts the Spring application. */
   public static void main(String[] args) {
     SpringApplication.run(SoarApplication.class, args);
   }

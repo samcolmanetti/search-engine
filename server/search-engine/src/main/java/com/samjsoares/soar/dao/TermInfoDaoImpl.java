@@ -12,12 +12,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/** {@link TermInfoDao} backed by the {@code term_info} table through a {@link JdbcTemplate}. */
 @Component
 public class TermInfoDaoImpl implements TermInfoDao {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final JdbcTemplate jdbcTemplate;
 
+  /** Creates a DAO that runs its queries against the given data source. */
   @Autowired
   public TermInfoDaoImpl(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);

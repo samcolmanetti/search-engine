@@ -16,6 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Downloads and parses web pages, waiting at least one second between requests to the same host.
+ * Can also read saved copies of pages from local resources.
+ */
 @Component
 public class Fetcher {
   private static final long MIN_INTERVAL = 1000;
@@ -26,13 +30,13 @@ public class Fetcher {
 
   private final Map<String, Long> lastRequestTimeMap = new LruCacheMap<>(128);
 
+  /** Creates a fetcher with no request history. */
   public Fetcher() {}
 
   /**
-   * Fetches and parses a URL string, returning a list of paragraph elements.
+   * Fetches and parses a URL string, returning the children of the document.
    *
-   * @param url
-   * @return Elements document elements
+   * @return the document's children, or null if the page could not be fetched or parsed
    */
   public Elements fetch(String url) {
     Document doc = fetchDocument(url);
@@ -45,10 +49,11 @@ public class Fetcher {
   }
 
   /**
-   * Fetches and parses a URL string, returning a list of paragraph elements.
+   * Fetches and parses a URL string, first waiting if the host was requested less than a second
+   * ago.
    *
-   * @param url
-   * @return Elements document elements
+   * @return the parsed document, or null if the URL is malformed, the download fails, the content
+   *     type is not supported, or the page cannot be parsed
    */
   public Document fetchDocument(String url) {
     URL realUrl;
@@ -97,11 +102,8 @@ public class Fetcher {
   }
 
   /**
-   * Reads the contents of a page from src/resources.
-   *
-   * @param url
-   * @return
-   * @throws IOException
+   * Reads a saved copy of a page from {@code src/main/resources/document_backup}, returning the
+   * children of the document, or null if the URL is malformed or the file cannot be read.
    */
   public Elements read(String url) {
     Document doc = readDocument(url);
@@ -114,11 +116,8 @@ public class Fetcher {
   }
 
   /**
-   * Reads the contents of a page from src/resources.
-   *
-   * @param url
-   * @return Document
-   * @throws IOException
+   * Reads and parses a saved copy of a page from {@code src/main/resources/document_backup}, found
+   * by the URL's host and path. Returns null if the URL is malformed or the file cannot be read.
    */
   public Document readDocument(String url) {
     URL realUrl;

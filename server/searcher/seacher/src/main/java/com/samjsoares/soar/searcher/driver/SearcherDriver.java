@@ -8,16 +8,25 @@ import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/** Interactive command-line front end that reads queries from standard input. */
 @Component
 public class SearcherDriver {
 
   private final Searcher searcher;
 
+  /**
+   * Creates a driver that runs queries through the given searcher.
+   *
+   * @param searcher the searcher used to answer queries
+   */
   @Autowired
   public SearcherDriver(Searcher searcher) {
     this.searcher = searcher;
   }
 
+  /**
+   * Prompts for queries and prints each result's URL and score until the user enters {@code \q}.
+   */
   public void run() {
     Scanner scanner = new Scanner(System.in);
     System.out.println("Welcome to Soar...");

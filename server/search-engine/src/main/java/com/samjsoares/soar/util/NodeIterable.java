@@ -13,11 +13,7 @@ public class NodeIterable implements Iterable<Node> {
 
   private final Node root;
 
-  /**
-   * Creates an iterable starting with the given Node.
-   *
-   * @param root
-   */
+  /** Creates an iterable that traverses {@code root} and its descendants. */
   public NodeIterable(Node root) {
     this.root = root;
   }
@@ -37,14 +33,10 @@ public class NodeIterable implements Iterable<Node> {
     // this stack keeps track of the Nodes waiting to be visited
     Stack<Node> stack;
 
-    /**
-     * Initializes the Iterator with the root Node on the stack.
-     *
-     * @param node
-     */
+    /** Initializes the Iterator with the root Node on the stack. */
     public NodeIterator(Node node) {
       stack = new Stack<>();
-      stack.push(root);
+      stack.push(node);
     }
 
     @Override

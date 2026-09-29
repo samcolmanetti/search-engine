@@ -9,11 +9,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Serves seed URLs in order from the {@code url_seed} table, storing the position of the next seed
+ * in {@code url_seed_index}.
+ */
 @Component
 public class UrlServerImpl implements UrlServer {
 
   private final JdbcTemplate jdbcTemplate;
 
+  /** Creates a server that reads seeds from {@code dataSource}. */
   @Autowired
   public UrlServerImpl(DataSource dataSource) {
     this(new JdbcTemplate(dataSource));

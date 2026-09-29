@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
+/**
+ * Maps a {@code doc_info} row to a {@link DocumentInfo}, filling in the id, URL, and index time.
+ */
 public class DocumentInfoMapper implements RowMapper {
   private static final String COLUMN_ID = "id";
   private static final String COLUMN_URL = "url";

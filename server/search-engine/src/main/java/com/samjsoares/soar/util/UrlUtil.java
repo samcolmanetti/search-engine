@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
+/** Static helpers for parsing, normalizing, and checking URLs. */
 public final class UrlUtil {
 
   private UrlUtil() {}
@@ -32,6 +33,10 @@ public final class UrlUtil {
     return url != null ? url.getHost() + url.getPath() : null;
   }
 
+  /**
+   * Returns the cleaned form of the URL as a string (see {@link #getCleanUrl(String)}), or null for
+   * an invalid URL.
+   */
   public static String getUrlString(String url) {
     URI uri = getUri(url);
 
@@ -73,6 +78,10 @@ public final class UrlUtil {
     return null;
   }
 
+  /**
+   * Parses the URL after replacing whitespace with {@code %20}, adding {@code https://} when it has
+   * no scheme, and dropping the query and fragment. Returns null for an invalid URL.
+   */
   public static java.net.URL getCleanUrl(String urlString) {
     try {
       io.mola.galimatias.URL url = io.mola.galimatias.URL.parse(cleanUpUrl(urlString));
@@ -96,6 +105,10 @@ public final class UrlUtil {
     return url;
   }
 
+  /**
+   * Returns the {@code /robots.txt} URL on the same scheme, host, and port as the given URL, or
+   * null if one can't be built (for example, when the URL is null).
+   */
   public static java.net.URL getRobotsTxtUrl(java.net.URL url) {
     try {
       // getHost, not getAuthority: the authority includes the port, which is passed separately.
@@ -107,6 +120,10 @@ public final class UrlUtil {
     return null;
   }
 
+  /**
+   * Returns true if the content type is one the crawler can index: {@code text/*}, {@code
+   * application/xml}, or {@code application/xhtml+xml}. Parameters after a {@code ;} are ignored.
+   */
   public static boolean isValidContentType(String contentType) {
     contentType = StringUtils.substringBefore(contentType, ";");
     return CONTENT_TYPE_PATTERN.matcher(contentType).matches();

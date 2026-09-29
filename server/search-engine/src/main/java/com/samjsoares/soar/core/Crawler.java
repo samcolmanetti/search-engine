@@ -14,18 +14,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Crawls pages taken from a queue of discovered links, mixing in seed URLs from a {@link
+ * UrlServer}, and indexes them. Respects robots.txt.
+ */
 @Component
 public class Crawler {
-  /** Where the results are stored */
+  /** Where the results are stored. */
   private final Indexer indexer;
 
-  /** Queue of URLs to may be indexed */
+  /** Queue of discovered URLs waiting to be crawled. */
   private final Queue<URL> queue = new LinkedList<>();
 
-  /** Fetcher used to get pages */
+  /** Fetcher used to get pages. */
   private final Fetcher fetcher;
 
-  /** Handler class that determines whether we can crawl a certain directory */
+  /** Checks robots.txt to determine whether a URL may be crawled. */
   private final RobotsHandler robotsHandler;
 
   private final UrlServer urlServer;
@@ -40,6 +44,9 @@ public class Crawler {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  /**
+   * Creates a crawler that fetches pages with {@code fetcher} and stores them in {@code indexer}.
+   */
   @Autowired
   public Crawler(
       Indexer indexer, Fetcher fetcher, RobotsHandler robotsHandler, UrlServer urlServer) {
@@ -49,20 +56,18 @@ public class Crawler {
     this.urlServer = urlServer;
   }
 
-  /**
-   * Returns the number of URLs in the queue.
-   *
-   * @return
-   */
+  /** Returns the number of URLs in the queue. */
   public int queueSize() {
     return queue.size();
   }
 
   /**
-   * Gets a URL from the queue and indexes it.
+   * Takes the next URL, usually from the queue but sometimes from the seed server, and indexes it
+   * if it is due. A page indexed within the past week isn't indexed again, but it is still fetched
+   * so its links can be queued.
    *
-   * @param offline
-   * @return boolean indicating whether or not to keep crawling
+   * @param offline whether to read pages from the local backup instead of downloading them
+   * @return false if the queue is empty and no seed URL is left, true otherwise
    */
   public boolean crawl(boolean offline) {
     if (queue.isEmpty()) {
@@ -124,11 +129,7 @@ public class Crawler {
     queueInternalLinks(paragraphs);
   }
 
-  /**
-   * Parses paragraphs and adds internal links to the queue.
-   *
-   * @param paragraphs
-   */
+  /** Queues the absolute URL of every link in the given elements that was not queued recently. */
   private void queueInternalLinks(Elements paragraphs) {
     if (paragraphs == null) {
       return;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/** REST controller that serves search results as JSON. */
 @RestController
 public class SearchController {
 
@@ -20,11 +21,23 @@ public class SearchController {
 
   private final Searcher searcher;
 
+  /**
+   * Creates a controller that answers queries with the given searcher.
+   *
+   * @param searcher the searcher used to answer queries
+   */
   @Autowired
   public SearchController(Searcher searcher) {
     this.searcher = searcher;
   }
 
+  /**
+   * Handles {@code GET /api/search?query=...} and returns the ranked results as JSON.
+   *
+   * @param query the search query; terms are separated by spaces or {@code +}
+   * @return a JSON array of results, highest relevance first ({@code []} when nothing matches), or
+   *     {@code {}} when the query is empty
+   */
   @RequestMapping(value = "/api/search", method = RequestMethod.GET)
   public String search(@RequestParam String query) {
     logger.info("Query (controller): {}", query);

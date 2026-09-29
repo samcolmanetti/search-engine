@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/** Holds a fixed list of English stop words that are left out of the index. */
 public final class StopWordsUtil {
 
   private StopWordsUtil() {}
@@ -562,6 +563,7 @@ public final class StopWordsUtil {
   private static final Set<String> stopWordSet =
       Collections.unmodifiableSet(new HashSet<>(Arrays.asList(stopwords)));
 
+  /** Returns true if the word is in the stop word list. The match is exact and case-sensitive. */
   public static boolean isStopWord(String word) {
     return stopWordSet.contains(word);
   }

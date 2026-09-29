@@ -1,5 +1,9 @@
 package com.samjsoares.soar.model;
 
+/**
+ * A row of the {@code doc_info} table: an indexed page's id, URL, index time, title, and
+ * description.
+ */
 public class DocumentInfo {
   private long id;
   private String url;
@@ -7,6 +11,7 @@ public class DocumentInfo {
   private String title;
   private String description;
 
+  /** Creates an empty instance to be filled in with setters. */
   public DocumentInfo() {}
 
   public long getId() {

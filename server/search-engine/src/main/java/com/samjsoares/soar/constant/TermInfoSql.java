@@ -1,5 +1,6 @@
 package com.samjsoares.soar.constant;
 
+/** SQL statements for the {@code term_info} table. */
 public final class TermInfoSql {
 
   private TermInfoSql() {}

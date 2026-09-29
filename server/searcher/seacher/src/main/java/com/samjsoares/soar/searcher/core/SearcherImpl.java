@@ -13,6 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * {@link Searcher} that lowercases the query, splits it on spaces or {@code +}, looks up each
+ * term's stemmed form (falling back to the raw term), and ranks the hits with a {@link
+ * TermFrequencyRanker}.
+ */
 @Component
 public class SearcherImpl implements Searcher {
 
@@ -20,6 +25,11 @@ public class SearcherImpl implements Searcher {
   private final SearchInfoDao searchInfoDao;
   private final Stemmer stemmer = new PorterStemmer();
 
+  /**
+   * Creates a searcher that reads term data from the given DAO.
+   *
+   * @param searchInfoDao the source of indexed term data
+   */
   @Autowired
   public SearcherImpl(SearchInfoDao searchInfoDao) {
     this.searchInfoDao = searchInfoDao;

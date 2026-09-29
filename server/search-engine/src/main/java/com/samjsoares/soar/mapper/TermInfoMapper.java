@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
+/** Maps a {@code term_info} row to a {@link TermInfo}. */
 public class TermInfoMapper implements RowMapper {
 
   private static final String COLUMN_DOC_ID = "doc_id";
