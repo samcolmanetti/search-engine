@@ -103,7 +103,9 @@ public class InMemoryIndexer implements Indexer {
 
   public boolean shouldIndex(String url) {
     String key = UrlUtil.getUrlKey(url);
-    if (key == null) return false;
+    if (key == null) {
+      return false;
+    }
     Long lastIndexedTime = timeIndexed.get(key);
 
     if (lastIndexedTime == null) {

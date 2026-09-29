@@ -4,7 +4,8 @@ import com.samjsoares.soar.searcher.constant.Regex;
 import com.samjsoares.soar.searcher.dao.SearchInfoDao;
 import com.samjsoares.soar.searcher.model.SearchInfo;
 import com.samjsoares.soar.searcher.model.SearchResult;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import opennlp.tools.stemmer.PorterStemmer;
 import opennlp.tools.stemmer.Stemmer;
 import org.slf4j.Logger;
@@ -22,6 +23,16 @@ public class SearcherImpl implements Searcher {
   @Autowired
   public SearcherImpl(SearchInfoDao searchInfoDao) {
     this.searchInfoDao = searchInfoDao;
+  }
+
+  @Override
+  public List<SearchResult> search(String query) {
+    if (query == null) {
+      return Collections.emptyList();
+    }
+
+    logger.info("Query: {}", query);
+    return search(query.toLowerCase().split(Regex.SPACE_OR_PLUS));
   }
 
   @Override
@@ -47,15 +58,5 @@ public class SearcherImpl implements Searcher {
     }
 
     return searchInfoList;
-  }
-
-  @Override
-  public List<SearchResult> search(String query) {
-    if (query == null) {
-      return Collections.emptyList();
-    }
-
-    logger.info("Query: {}", query);
-    return search(query.toLowerCase().split(Regex.SPACE_OR_PLUS));
   }
 }

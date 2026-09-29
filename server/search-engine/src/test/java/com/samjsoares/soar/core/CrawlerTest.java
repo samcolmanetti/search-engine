@@ -82,7 +82,7 @@ public class CrawlerTest {
   private final RecordingIndexer indexer = new RecordingIndexer();
 
   /** Seed server that hands out the given URLs once each, then null. */
-  private static URLServer seeds(String... urls) {
+  private static UrlServer seeds(String... urls) {
     List<String> remaining = new ArrayList<>();
     for (String url : urls) {
       remaining.add(url);
@@ -90,7 +90,7 @@ public class CrawlerTest {
     return () -> remaining.isEmpty() ? null : UrlUtil.getCleanUrl(remaining.remove(0));
   }
 
-  private Crawler crawler(URLServer urlServer) {
+  private Crawler crawler(UrlServer urlServer) {
     return new Crawler(indexer, fetcher, robotsHandler, urlServer);
   }
 

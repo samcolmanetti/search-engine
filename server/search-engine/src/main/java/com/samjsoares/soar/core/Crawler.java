@@ -1,6 +1,6 @@
 package com.samjsoares.soar.core;
 
-import com.samjsoares.soar.core.datastructure.LRUCacheSet;
+import com.samjsoares.soar.core.datastructure.LruCacheSet;
 import com.samjsoares.soar.util.UrlUtil;
 import java.net.URL;
 import java.util.LinkedList;
@@ -28,13 +28,13 @@ public class Crawler {
   /** Handler class that determines whether we can crawl a certain directory */
   private final RobotsHandler robotsHandler;
 
-  private final URLServer urlServer;
+  private final UrlServer urlServer;
 
   /**
    * Keys of recently queued URLs, from {@link UrlUtil#getUrlKey(URL)}, so the http and https
    * versions of a page are queued once.
    */
-  private final LRUCacheSet<String> cache = new LRUCacheSet<>(512);
+  private final LruCacheSet<String> cache = new LruCacheSet<>(512);
 
   private final Random random = new Random();
 
@@ -42,7 +42,7 @@ public class Crawler {
 
   @Autowired
   public Crawler(
-      Indexer indexer, Fetcher fetcher, RobotsHandler robotsHandler, URLServer urlServer) {
+      Indexer indexer, Fetcher fetcher, RobotsHandler robotsHandler, UrlServer urlServer) {
     this.indexer = indexer;
     this.fetcher = fetcher;
     this.robotsHandler = robotsHandler;

@@ -71,6 +71,9 @@
                 </dependencies>
                 <configuration>
                     <configLocation>google_checks.xml</configLocation>
+                <suppressionsLocation>${project.basedir}/../checkstyle-suppressions.xml</suppressionsLocation>
+                <!-- google_checks.xml reads its suppressions file from this property. -->
+                <suppressionsFileExpression>org.checkstyle.google.suppressionfilter.config</suppressionsFileExpression>
                     <consoleOutput>true</consoleOutput>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>

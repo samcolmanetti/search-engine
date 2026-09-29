@@ -14,7 +14,7 @@ public class DocumentProcessor {
 
   private static final int MAX_SENTENCES = 2;
   private static final int MAX_DESCRIPTION = 240;
-  private static final String ELLIPSIS = "\u2026";
+  private static final String ELLIPSIS = "…";
 
   private Document document;
   private long documentId;

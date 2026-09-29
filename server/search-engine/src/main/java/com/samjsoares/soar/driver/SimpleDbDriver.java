@@ -19,7 +19,7 @@ public class SimpleDbDriver {
   }
 
   public void runSimpleInsert() {
-    long time1 = System.currentTimeMillis();
+    final long time1 = System.currentTimeMillis();
 
     documentInfoDao.upsert(
         "sam1.com", System.currentTimeMillis(), "sam1", "this is the description for sam1");

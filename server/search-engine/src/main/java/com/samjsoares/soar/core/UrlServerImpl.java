@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class URLServerImpl implements URLServer {
+public class UrlServerImpl implements UrlServer {
 
   private final JdbcTemplate jdbcTemplate;
 
   @Autowired
-  public URLServerImpl(DataSource dataSource) {
+  public UrlServerImpl(DataSource dataSource) {
     this(new JdbcTemplate(dataSource));
   }
 
-  URLServerImpl(JdbcTemplate jdbcTemplate) {
+  UrlServerImpl(JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
 

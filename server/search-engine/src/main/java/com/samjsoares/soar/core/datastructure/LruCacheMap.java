@@ -4,22 +4,22 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * The LRUCacheMap class is a list that removes the least recently used item when the size of the
+ * The LruCacheMap class is a list that removes the least recently used item when the size of the
  * list reaches the specified limit.
  *
  * @param <K>
  * @param <V>
  */
-public class LRUCacheMap<K, V> extends LinkedHashMap<K, V> {
+public class LruCacheMap<K, V> extends LinkedHashMap<K, V> {
   private static final int DEFAULT_LIMIT = 128;
   private final int limit;
 
-  public LRUCacheMap() {
+  public LruCacheMap() {
     super(16, 0.75f, true);
     this.limit = DEFAULT_LIMIT;
   }
 
-  public LRUCacheMap(int limit) {
+  public LruCacheMap(int limit) {
     super(16, 0.75f, true);
     this.limit = limit;
   }

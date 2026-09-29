@@ -1,6 +1,11 @@
 package com.samjsoares.soar.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 import org.jsoup.nodes.Node;
 
 /** Performs a depth-first traversal of a jsoup Node. */

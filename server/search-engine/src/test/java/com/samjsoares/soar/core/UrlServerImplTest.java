@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class URLServerImplTest {
+public class UrlServerImplTest {
 
   /** Serves the seed table from a list, with ids starting at 1, instead of from Postgres. */
   private static class FakeJdbcTemplate extends JdbcTemplate {
@@ -37,7 +37,7 @@ public class URLServerImplTest {
   }
 
   private final FakeJdbcTemplate jdbcTemplate = new FakeJdbcTemplate();
-  private final URLServer urlServer = new URLServerImpl(jdbcTemplate);
+  private final UrlServer urlServer = new UrlServerImpl(jdbcTemplate);
 
   @Test
   public void testServesSeedsInOrder() {

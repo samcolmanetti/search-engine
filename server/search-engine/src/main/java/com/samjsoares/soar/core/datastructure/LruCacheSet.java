@@ -1,21 +1,21 @@
 package com.samjsoares.soar.core.datastructure;
 
-public class LRUCacheSet<T> {
+public class LruCacheSet<T> {
 
   private static final Object PRESENT = new Object();
 
-  private final LRUCacheMap<T, Object> lruCacheMap;
+  private final LruCacheMap<T, Object> lruCacheMap;
 
   private static final int DEFAULT_LIMIT = 128;
   private final int limit;
 
-  public LRUCacheSet() {
-    lruCacheMap = new LRUCacheMap<>(DEFAULT_LIMIT);
+  public LruCacheSet() {
+    lruCacheMap = new LruCacheMap<>(DEFAULT_LIMIT);
     this.limit = DEFAULT_LIMIT;
   }
 
-  public LRUCacheSet(int limit) {
-    lruCacheMap = new LRUCacheMap<>(limit);
+  public LruCacheSet(int limit) {
+    lruCacheMap = new LruCacheMap<>(limit);
     this.limit = limit;
   }
 

@@ -1,6 +1,6 @@
 package com.samjsoares.soar.searcher.dao;
 
-import com.samjsoares.soar.searcher.constant.SearcherSQL;
+import com.samjsoares.soar.searcher.constant.SearcherSql;
 import com.samjsoares.soar.searcher.mapper.SearchInfoMapper;
 import com.samjsoares.soar.searcher.model.SearchInfo;
 import java.util.List;
@@ -22,6 +22,6 @@ public class SearchInfoDaoImpl implements SearchInfoDao {
   @Override
   public List<SearchInfo> getSearchInfo(String term) {
     Object[] params = new Object[] {term, term};
-    return jdbcTemplate.query(SearcherSQL.SELECT_BY_TERM, new SearchInfoMapper(), params);
+    return jdbcTemplate.query(SearcherSql.SELECT_BY_TERM, new SearchInfoMapper(), params);
   }
 }

@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-public class LRUCacheMapTest {
+public class LruCacheMapTest {
 
   @Test
   public void testEvictsOldestInsertedWhenNotAccessed() {
-    Map<String, Integer> cache = new LRUCacheMap<>(2);
+    Map<String, Integer> cache = new LruCacheMap<>(2);
     cache.put("a", 1);
     cache.put("b", 2);
     cache.put("c", 3);
@@ -19,7 +19,7 @@ public class LRUCacheMapTest {
 
   @Test
   public void testEvictsLeastRecentlyAccessed() {
-    Map<String, Integer> cache = new LRUCacheMap<>(2);
+    Map<String, Integer> cache = new LruCacheMap<>(2);
     cache.put("a", 1);
     cache.put("b", 2);
     cache.get("a");
@@ -30,7 +30,7 @@ public class LRUCacheMapTest {
 
   @Test
   public void testUpdatingValueDoesNotGrow() {
-    Map<String, Integer> cache = new LRUCacheMap<>(2);
+    Map<String, Integer> cache = new LruCacheMap<>(2);
     cache.put("a", 1);
     cache.put("a", 2);
 
@@ -39,7 +39,7 @@ public class LRUCacheMapTest {
 
   @Test
   public void testDefaultLimitIs128() {
-    Map<Integer, Integer> cache = new LRUCacheMap<>();
+    Map<Integer, Integer> cache = new LruCacheMap<>();
     for (int i = 0; i < 128; i++) {
       cache.put(i, i);
     }

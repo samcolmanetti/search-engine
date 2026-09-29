@@ -1,8 +1,8 @@
 package com.samjsoares.soar.searcher.constant;
 
-public final class SearcherSQL {
+public final class SearcherSql {
 
-  private SearcherSQL() {}
+  private SearcherSql() {}
 
   public static final String SELECT_BY_TERM =
       "select doc_id, url, page_rank, term, frequency, title, description, "

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<!-- Checkstyle suppressions shared by both Maven projects under server/. -->
+<suppressions>
+  <!-- Test classes and methods are named for what they check, so they don't need Javadoc. -->
+  <suppress checks="MissingJavadocType|MissingJavadocMethod" files="[\\/]src[\\/]test[\\/]"/>
+</suppressions>

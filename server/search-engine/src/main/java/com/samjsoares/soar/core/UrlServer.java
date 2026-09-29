@@ -2,6 +2,6 @@ package com.samjsoares.soar.core;
 
 import java.net.URL;
 
-public interface URLServer {
+public interface UrlServer {
   URL getNextUrl();
 }

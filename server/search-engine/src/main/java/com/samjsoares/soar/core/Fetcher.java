@@ -1,6 +1,6 @@
 package com.samjsoares.soar.core;
 
-import com.samjsoares.soar.core.datastructure.LRUCacheMap;
+import com.samjsoares.soar.core.datastructure.LruCacheMap;
 import com.samjsoares.soar.util.UrlUtil;
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class Fetcher {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private final Map<String, Long> lastRequestTimeMap = new LRUCacheMap<>(128);
+  private final Map<String, Long> lastRequestTimeMap = new LruCacheMap<>(128);
 
   public Fetcher() {}
 

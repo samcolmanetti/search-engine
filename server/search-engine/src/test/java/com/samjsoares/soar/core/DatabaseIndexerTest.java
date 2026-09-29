@@ -112,7 +112,7 @@ public class DatabaseIndexerTest {
 
   @Test
   public void testUpsertsDocumentThenTerms() {
-    long before = System.currentTimeMillis();
+    final long before = System.currentTimeMillis();
     indexer.indexPage(URL, Fixtures.html("article.html", URL));
 
     assertThat(documentInfoDao.upserted).hasSize(1);
@@ -181,7 +181,7 @@ public class DatabaseIndexerTest {
   }
 
   @Test
-  public void testShouldIndexUrlIndexedOverAWeekAgo() {
+  public void testShouldIndexUrlIndexedOverOneWeekAgo() {
     documentInfoDao.timeIndexed.put(
         CLEAN_URL, System.currentTimeMillis() - TimeConstants.MS_PER_WEEK - 1000);
 

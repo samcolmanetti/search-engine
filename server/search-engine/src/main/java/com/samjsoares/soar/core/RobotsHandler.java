@@ -1,7 +1,7 @@
 package com.samjsoares.soar.core;
 
 import com.panforge.robotstxt.RobotsTxt;
-import com.samjsoares.soar.core.datastructure.LRUCacheMap;
+import com.samjsoares.soar.core.datastructure.LruCacheMap;
 import com.samjsoares.soar.util.UrlUtil;
 import java.io.InputStream;
 import java.net.URL;
@@ -17,7 +17,7 @@ public class RobotsHandler {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private final Map<String, RobotsTxt> map = new LRUCacheMap<>(CACHE_LIMIT);
+  private final Map<String, RobotsTxt> map = new LruCacheMap<>(CACHE_LIMIT);
 
   public RobotsHandler() {}
 
@@ -32,7 +32,7 @@ public class RobotsHandler {
       return get(key);
     }
 
-    URL robotsUrl = UrlUtil.getRobotsTxtURL(url);
+    URL robotsUrl = UrlUtil.getRobotsTxtUrl(url);
     if (robotsUrl == null) {
       return null;
     }

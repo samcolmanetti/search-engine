@@ -67,6 +67,7 @@ public final class UrlUtil {
         return javaUrl.toURI();
       }
     } catch (Exception e) {
+      // Not a valid URI; callers treat null as an invalid URL.
     }
 
     return null;
@@ -95,7 +96,7 @@ public final class UrlUtil {
     return url;
   }
 
-  public static java.net.URL getRobotsTxtURL(java.net.URL url) {
+  public static java.net.URL getRobotsTxtUrl(java.net.URL url) {
     try {
       // getHost, not getAuthority: the authority includes the port, which is passed separately.
       return new java.net.URL(url.getProtocol(), url.getHost(), url.getPort(), ROBOTS_TXT_PATH);
